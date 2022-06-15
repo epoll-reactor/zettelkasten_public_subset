@@ -1,0 +1,30 @@
+Перечисления могут иметь конструкторы.
+  public enum Season {
+    WINTER("cold"), SPRING("warmer"), SUMMER("hot"), AUTUMN("cooler");
+
+    Season(String description) {
+      this.description = description;
+    }
+
+    private final String description;
+
+    public string getDescription() {
+      return description;
+    }
+  }
+
+Перечисления могут иметь тела, которые воспринимаются как анонимные классы.
+  public enum Season {
+    WINTER {
+      String getDescription() {return "cold";}
+    },
+    SPRING {
+      String getDescription() {return "warmer";}
+    },
+    SUMMER {
+      String getDescription() {return "hot";}
+    },
+    FALL {
+      String getDescription() {return "cooler";}
+    };
+  }

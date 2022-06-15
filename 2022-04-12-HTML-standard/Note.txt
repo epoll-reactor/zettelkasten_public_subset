@@ -1,0 +1,32 @@
+HTML-теги представляются парами, например, <p>(Start tag) </p>(End tag), однако, существуют теги, не требующие
+закрытия, такие как <img>. 
+
+Простейший пример:
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>This is a title</title>
+  </head>
+  <body>
+    <div>
+        <p>Hello world!</p>
+    </div>
+  </body>
+</html>
+
+Текст между <head> и </head> описывает веб-страницу, а между <body> и </body> её содержимое.
+<title> отвечает за вывод текста во вкладке браузера и в названии окна.
+<div> отвечает за разделение части содержимого для последующей кастомизации.
+<!DOCTYPE html> -- Document Type Declaration. Нужен для отображения по стандарту HTML5. Если этого нет -
+браузер переходит в "quirks mode".
+
+HTML-документы подразумевают вложенную структуру HTML-элементов. Они представлены тегами.
+
+Стартовый тег может также включать в себя атрибуты, например, необходимые для связки с CSS, заданием свойств
+тега. Например, <img src="example.com/example.jpg">.
+
+Общая форма тега с атрибутами: <tag attribute1="value1" attribute2="value2">''content''</tag>.
+
+<!-- Это комментарий. -->
+
+Аббревиатуры: <abbr id="anId" class="jargon" style="color:purple;" title="Hypertext Markup Language">HTML</abbr>.

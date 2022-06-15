@@ -1,0 +1,179 @@
+/* Alignment stuff. */
+.vertical-block {
+	overflow-x: visible;
+	white-space: nowrap; 
+}
+
+.vertical-element {
+	vertical-align: top;
+	display: inline-block;
+}
+
+.horizontal-element {
+	display: block;
+}
+
+/* Responsivity. */
+@media only screen and (min-width:768px) {
+	.vertical-element {
+		display: block;
+	}
+}
+
+@media only screen and (min-width:1200px) {
+	.vertical-element {
+		display: inline-block;
+	}
+}
+
+/* The navigation menu. */
+.navbar {
+	overflow: hidden;
+	background-color: #333;
+}
+
+/* Navigation links */
+.navbar a {
+	float: left;
+	font-size: 16px;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+}
+
+/* The subnavigation menu */
+.subnav {
+	float: left;
+	overflow: hidden;
+}
+
+/* Subnav button */
+.subnav .subnavbtn {
+	font-size: 16px;
+	border: none;
+	outline: none;
+	color: white;
+	padding: 14px 16px;
+	background-color: inherit;
+	font-family: inherit;
+	margin: 0;
+}
+
+/* Add a red background color to navigation links on hover */
+.navbar a:hover, .subnav:hover .subnavbtn {
+	background-color: red;
+}
+
+/* Style the subnav content - positioned absolute */
+.subnav-content {
+	display: none;
+	position: absolute;
+	left: 1;
+	background-color: red;
+	z-index: 1;
+}
+
+/* Style the subnav links */
+.subnav-content a {
+	float: left;
+	color: white;
+	text-decoration: none;
+}
+
+/* Add a grey background color on hover */
+.subnav-content a:hover {
+	background-color: #eee;
+	color: black;
+}
+
+/* When you move the mouse over the subnav container, open the subnav content */
+.subnav:hover .subnav-content {
+	display: block;
+}
+
+/* Map image */
+.map-image {
+	padding: 40px; 
+}
+
+/* Map */
+.tooltip {
+	position: relative;
+	display: inline-block;
+	border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+	visibility: hidden;
+	width: 300px;
+	background-color: black;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 0;
+
+	/* Position the tooltip */
+	position: absolute;
+	z-index: 1;
+	top: 100px;
+	left: 600px;
+}
+
+.tooltip:hover .tooltiptext {
+	visibility: visible;
+}
+
+#area{
+	width:600px;
+	height: 600px;
+	position: relative;
+}
+#map_lodzkie{
+	position: absolute;top:0;left:0;
+	z-index: 1;
+}
+#area li{
+	position: absolute;top:0;left:0;
+	z-index: 2;
+	display: none;
+}
+
+.brief-font {
+	font-family: "Lucida Console", "Courier New", monospace;
+	font-size: 32px;
+}
+
+.city-name-font {
+	font-family: "Lucida Console", "Courier New", monospace;
+	font-size: 72px;
+}
+
+.andrespol-text {
+	background-color: black;
+	/* display: none */
+}
+
+.andrespol-text:hover {
+	background-color: red;
+	/* display: block */
+}
+
+.map-data {
+	box-sizing:border-box;
+	float:left;
+	width:50%;
+	padding-left:20px;
+}
+
+@media screen and (max-width:830px) {
+	.map-cnt {float:none;}
+	.map-data {
+		margin-top:30px; 
+		float:none;
+	}
+}
+.map-data {
+	position: relative;
+	padding-top:30px;
+}

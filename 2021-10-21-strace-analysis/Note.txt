@@ -1,0 +1,66 @@
+На примере использующего cpp_vk_lib приложения можно провести анализ его
+работы с помощью strace.
+
+Сначала вызывается execve бинарного файла.
+
+Затем вызывается brk(NULL), что означает запрос адреса памяти, где заканчивает-
+ся куча текущего процесса.
+
+Затем открываются файлы shared-библиотек. Что странно - пути перебираются в
+каким-то случайным способом, пока наконец файл не откроется, например:
+
+openat(AT_FDCWD, "lib/build/lib/glibc-hwcaps/x86-64-v3/libgtest.so.1.11.0",
+  O_RDONLY|O_CLOEXEC) = -1 ENOENT
+openat(AT_FDCWD, "lib/build/lib/glibc-hwcaps/x86-64-v2/libgtest.so.1.11.0",
+  O_RDONLY|O_CLOEXEC) = -1 ENOENT
+openat(AT_FDCWD, "lib/build/lib/tls/x86_64/x86_64/libgtest.so.1.11.0",
+  O_RDONLY|O_CLOEXEC) = -1 ENOENT
+openat(AT_FDCWD, "lib/build/lib/tls/x86_64/libgtest.so.1.11.0",
+  O_RDONLY|O_CLOEXEC) = -1 ENOENT
+openat(AT_FDCWD, "lib/build/lib/tls/libgtest.so.1.11.0",
+  O_RDONLY|O_CLOEXEC) = -1 ENOENT
+openat(AT_FDCWD, "lib/build/lib/x86_64/x86_64/libgtest.so.1.11.0",
+  O_RDONLY|O_CLOEXEC) = -1 ENOENT
+openat(AT_FDCWD, "lib/build/lib/libgtest.so.1.11.0",
+  O_RDONLY|O_CLOEXEC) = 3
+
+Далее идёт несколько вызовов mmap, вероятно это отображение по частям библио-
+теки в память.
+
+mmap(NULL, 512512, PROT_READ,
+     MAP_PRIVATE | MAP_DENYWRITE, 3, 0)                   = 0x7f6687ea1000
+
+mmap(0x7f6687ebf000, 290816, PROT_READ | PROT_EXEC,
+     MAP_PRIVATE | MAP_FIXED | MAP_DENYWRITE, 3, 0x1e000) = 0x7f6687ebf000
+
+mmap(0x7f6687f06000,  86016, PROT_READ,
+     MAP_PRIVATE | MAP_FIXED | MAP_DENYWRITE, 3, 0x65000) = 0x7f6687f06000
+
+mmap(0x7f6687f1b000,  12288, PROT_READ | PROT_WRITE,
+     MAP_PRIVATE | MAP_FIXED | MAP_DENYWRITE, 3, 0x79000) = 0x7f6687f1b000
+
+mmap(0x7f6687f1e000,    512, PROT_READ | PROT_WRITE,
+     MAP_PRIVATE | MAP_FIXED | MAP_ANONYMOUS, -1, 0)      = 0x7f6687f1e000
+
+Затем файл с библиотекой закрывается вызовом close(3).
+Этот процесс повторяется для всех shared-библиотек.
+
+Далее вызывается set_robust_list(0x7f6686ec46e0, 24), который нужен для
+передачи ядру указателя на голову списка разблокированных futex'ов, которые
+нужно разблокировать при выходе процесса. Обычно, контроль над этим осуществ-
+ляется внутри glibc и не передаётся в userspace.
+
+Далее устанавливается размер стека:
+prlimit64(0, RLIMIT_STACK, NULL,
+          {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+
+Далее начинается выполнение самого кода уровня приложения.
+
+Также можно попросить strace приложения, что бегает в сеть и узнать где живёт
+человек благодаря примерно таким вызовам, лол:
+
+getpeername(6, {sa_family=AF_INET, sin_port=htons(443),
+/* получатель */ sin_addr=inet_addr("xxx.xxx.xxx.xxx")}, [128 => 16]) = 0
+
+getsockname(6, {sa_family=AF_INET, sin_port=htons(33600),
+/* отправитель */ sin_addr=inet_addr("xxx.xxx.xxx.xxx")}, [128 => 16]) = 0

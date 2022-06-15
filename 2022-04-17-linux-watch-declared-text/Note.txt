@@ -1,0 +1,1 @@
+find path -iname '*.ext' | xargs grep 'text' -sl

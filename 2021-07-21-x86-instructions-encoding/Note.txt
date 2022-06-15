@@ -1,0 +1,21 @@
+х86 инструкции
+
+Длина до 15 байт.
+Структура:
+	- Legacy prefixes (1-4 bytes, optional)
+		Каждая инструкция может иметь до 4 префиксов.
+		https://wiki.osdev.org/X86-64_Instruction_Encoding#Legacy_Prefixes
+
+	- Opcode with prefixes(1-4 bytes, required)
+
+	- ModR/M (1 byte, required)
+		Используется для кодирования инструкций,
+		оба операнда которых - регистры или адреса памяти
+
+	- SIB (1 byte, required)
+
+	- Displacement (1, 2, 4 or 8 bytes, required)
+
+	- Immediate (1, 2, 4 or 8 bytes, required)
+		Immediate - операнд, хранимый в инструкции, а не
+		в памяти или регистре.

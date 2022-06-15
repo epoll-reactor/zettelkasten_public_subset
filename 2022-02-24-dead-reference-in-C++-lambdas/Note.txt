@@ -1,0 +1,26 @@
+Имея код
+
+// Vars.
+const uint8_t r = dist(gen);
+const uint8_t g = dist(gen);
+const uint8_t b = dist(gen);
+
+for (uint16_t i = 0; i < image_size_; ++i) {
+  asio::post(io_context_, [&] {
+    size_t offset = i * image_size_ * 3;
+    for (uint16_t j = 0; j < image_size_; ++j) {
+      const uint8_t value = compute_point(i, j);
+      buffer[offset++] = static_cast<uint8_t>(value / r);
+      buffer[offset++] = static_cast<uint8_t>(value / g);
+      buffer[offset++] = static_cast<uint8_t>(value / b);
+    }
+  });
+}
+
+// ...
+
+io_context_.run();,
+
+имеем мёртвую ссылку на i, которая раньше была внутри цикла.
+Чтобы код работал, как задумано, нужно захватить i явно: [&, i]. Тогда в каждой лямбде будет захвачена
+копия на нужный i.

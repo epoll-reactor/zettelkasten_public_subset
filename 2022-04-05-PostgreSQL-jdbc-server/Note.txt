@@ -1,0 +1,13 @@
+JDBC требует название таблицы при соединении, например в
+  jdbc:postgresql://localhost:5432/TABLENAME
+, но
+  jdbc:postgresql://localhost:5432/postgres
+не требует, и заходит в нашего пользователя, логин и пароль которого мы укажем.
+
+Так, в Kotlin с помощью Hikari можно подключиться к серверу PostgreSQL:
+    val ds = HikariDataSource(HikariConfig().apply {
+        jdbcUrl = "jdbc:postgresql://localhost:5432/postgres"
+        username = "exposed"
+        password = "exposed"
+        driverClassName = "org.postgresql.Driver"
+    })

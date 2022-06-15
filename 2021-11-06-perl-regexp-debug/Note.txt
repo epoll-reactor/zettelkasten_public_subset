@@ -1,0 +1,25 @@
+Perl позволяет смотреть, во что разворачивается регулярное выражение.
+Например:
+perl -Mre=debug -e '"1234.5678.9876.5432"=~/((\d{4}|0\d{3})\.?){4}/'
+
+Compiling REx "((\d{4}|0\d{3})\.?){4}"
+Final program:
+   1: CURLYX[0]{4,4} (26)
+   3:   OPEN1 (5)
+   5:     OPEN2 (7)
+   7:       BRANCH (11)
+   8:         CURLY{4,4} (17)
+  10:           POSIXU[\d] (0)
+  11:       BRANCH (FAIL)
+  12:         EXACT <0> (14)
+  14:         CURLY{3,3} (17)
+  16:           POSIXU[\d] (0)
+  17:     CLOSE2 (19)
+  19:     CURLY{0,1} (23)
+  21:       EXACT <.> (0)
+  23:   CLOSE1 (25)
+  25: WHILEM (0)
+  26: NOTHING (27)
+  27: END (0)
+minlen 16
+

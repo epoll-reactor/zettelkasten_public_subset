@@ -1,0 +1,249 @@
+<html lang="pl">
+<head>
+	<title>Mapa</title>
+	<meta charset="utf-8" />
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<!-- Load font awesome icons. -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="style.css">
+	
+	<!-- Scripts. -->
+        <script type="text/javascript" src="jquery-1.10.2.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("area").hover(function() {
+				var href=$(this).attr("href");
+				$(href).stop(); // To stop showing previous content.
+				$(href).fadeIn("500");
+				$(href).easing("swing");
+			}, function() {
+				var href=$(this).attr("href");
+				$(href).stop(); // To stop showing previous content.
+				$(href).fadeOut("500");
+				$(href).easing("swing");
+			});
+		});
+
+		// Smooth scroll to href.
+		$(document).on('click', 'a[href^="#"]', function (event) {
+			event.preventDefault();
+			$('html, body').animate({
+				scrollTop: $($.attr(this, 'href')).offset().top
+			}, 500);
+		});
+	</script>
+</head>
+<body>
+	<script type="text/javascript">
+		function openLink(url) {
+			window.open(url, '_blank').focus();
+		}
+	</script>
+
+	<!-- The navigation menu -->
+	<div class="navbar"> 
+		<a href="#home">Home</a> 
+		<div class="subnav"> 
+			<button class="subnavbtn">About <i class="fa fa-caret-down"></i></button> 
+			<div class="subnav-content"> 
+				<a href="#brief">Site</a>
+				<a href="#contact">Contact</a> 
+			</div> 
+		</div> 
+	</div> 
+
+	<br>
+	<br>
+	<br>
+	<p class="brief-font" style="text-align: center; font-size: 48px;"><b>
+		Łódź East County
+	<b></p>
+	
+	<!-- The map. -->
+	<div id="area"> 
+		<img class="map-image" id="map_lodzkie" usemap="#lodzkie" src="powiat_lodzki.png" /> 
+
+		<!-- Regions images. -->
+		<ul> 
+			<li id="andrespol">
+				<div class="vertical-block">
+					<div class="vertical-element">			
+						<img class="map-image" src="andrespol.png" usemap="#lodzkie" />
+					</div>
+					
+					<div class="vertical-element"> 
+						<p class="city-name-font"><b>Andrespol<b></p>
+						<p style="display: block; white-space: normal; width: 400px; font-size: 24px;"> 
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit. tiam semper diam at
+							erat pulvinar, at pulvinar felis blandit. Vestibulum volutpat tellus diam,
+							consequat gravida libero rhoncus ut. Maecenas imperdiet felis nisi, fringilla
+							luctus felis hendrerit sit amet. Pellentesque interdum, nisl nec interdum
+							maximus, augue diam porttitor lorem, et sollicitudin felis neque sit amet erat. 
+						</p> 
+					</div>
+
+					<div class="vertical-element">
+						<img class="map-image" src="map_andrespol.png" usemap="#lodzkie" /> 
+					</div>
+				</div>
+			</li> 
+
+			<li id="brojce">
+				<div class="vertical-block">
+					<div class="vertical-element">			
+						<img class="map-image" src="brojce.png" usemap="#lodzkie" />
+					</div>
+
+					<div class="vertical-element">
+						<p class="city-name-font"><b>Brójce<b></p>
+						<p style="display: block; white-space: normal; width: 400px; font-size: 24px;"> 
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit. tiam semper diam at
+							erat pulvinar, at pulvinar felis blandit. Vestibulum volutpat tellus diam,
+							consequat gravida libero rhoncus ut. Maecenas imperdiet felis nisi, fringilla
+							luctus felis hendrerit sit amet. Pellentesque interdum, nisl nec interdum
+							maximus, augue diam porttitor lorem, et sollicitudin felis neque sit amet erat. 
+						</p> 
+					</div>
+					
+					<div class="vertical-element">
+						<img class="map-image" src="map_brojce.png" usemap="#lodzkie" /> 
+					</div>
+				</div>
+			</li> 
+
+			<li id="koluszki">
+				<div class="vertical-block">
+					<div class="vertical-element">			
+						<img class="map-image" src="koluszki.png" usemap="#lodzkie" />
+					</div>
+					
+					<div class="vertical-element">
+						<p class="city-name-font"><b>Koluszki<b></p>
+						<p style="display: block; white-space: normal; width: 400px; font-size: 24px;"> 
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit. tiam semper diam at
+							erat pulvinar, at pulvinar felis blandit. Vestibulum volutpat tellus diam,
+							consequat gravida libero rhoncus ut. Maecenas imperdiet felis nisi, fringilla
+							luctus felis hendrerit sit amet. Pellentesque interdum, nisl nec interdum
+							maximus, augue diam porttitor lorem, et sollicitudin felis neque sit amet erat. 
+						</p> 
+					</div>
+
+					<div class="vertical-element">
+						<img class="map-image" src="map_koluszki.png" usemap="#lodzkie" />
+					</div>
+				</div>
+			</li> 
+
+			<li id="nowosolna">
+				<div class="vertical-block">
+					<div class="vertical-element">			
+						<img class="map-image" src="nowosolna.png" usemap="#lodzkie" />
+					</div>
+					
+					<div class="vertical-element">
+						<p class="city-name-font"><b>Nowosolna<b></p>
+						<p style="display: block; white-space: normal; width: 400px; font-size: 24px;"> 
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit. tiam semper diam at
+							erat pulvinar, at pulvinar felis blandit. Vestibulum volutpat tellus diam,
+							consequat gravida libero rhoncus ut. Maecenas imperdiet felis nisi, fringilla
+							luctus felis hendrerit sit amet. Pellentesque interdum, nisl nec interdum
+							maximus, augue diam porttitor lorem, et sollicitudin felis neque sit amet erat. 
+						</p> 
+					</div>
+					
+					<div class="vertical-element">
+						<img class="map-image" src="map_nowosolna.png" usemap="#lodzkie" />
+					</div>
+				</div>
+			</li>
+
+			<li id="rzgow">
+				<div class="vertical-block">
+					<div class="vertical-element">			
+						<img class="map-image" src="rzgow.png" usemap="#lodzkie" />
+					</div>
+					
+					<div class="vertical-element">
+						<p class="city-name-font"><b>Rzgów<b></p>
+						<p style="display: block; white-space: normal; width: 400px; font-size: 24px;"> 
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit. tiam semper diam at
+							erat pulvinar, at pulvinar felis blandit. Vestibulum volutpat tellus diam,
+							consequat gravida libero rhoncus ut. Maecenas imperdiet felis nisi, fringilla
+							luctus felis hendrerit sit amet. Pellentesque interdum, nisl nec interdum
+							maximus, augue diam porttitor lorem, et sollicitudin felis neque sit amet erat. 
+						</p> 
+					</div>
+					
+					<div class="vertical-element">
+						<img class="map-image" src="map_rzgow.png" usemap="#lodzkie" />
+					</div>
+				</div>
+			</li> 
+
+			<li id="tuszyn">
+				<div class="vertical-block">
+					<div class="vertical-element">			
+						<img class="map-image" src="tuszyn.png" usemap="#lodzkie" />
+					</div>
+					
+					<div class="vertical-element">
+						<p class="city-name-font"><b>Tuszyn<b></p>
+						<p style="display: block; white-space: normal; width: 400px; font-size: 24px;"> 
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit. tiam semper diam at
+							erat pulvinar, at pulvinar felis blandit. Vestibulum volutpat tellus diam,
+							consequat gravida libero rhoncus ut. Maecenas imperdiet felis nisi, fringilla
+							luctus felis hendrerit sit amet. Pellentesque interdum, nisl nec interdum
+							maximus, augue diam porttitor lorem, et sollicitudin felis neque sit amet erat. 
+						</p> 
+					</div>
+					
+					<div class="vertical-element">
+						<img class="map-image" src="map_tuszyn.png" usemap="#lodzkie" />
+					</div>
+				</div>
+			</li> 
+		</ul>
+
+		<!-- Regions interactive parts. -->
+		<map id="lodzkie" name="lodzkie">
+			<area shape="poly" alt="andrespol" title="andrespol" coords="244,202,253,209,260,217,267,223,274,220,281,213,284,225,282,237,272,249,267,256,256,260,248,259,245,266,251,279,245,286,238,286,229,293,213,293,217,283,240,242,239,226,237,217" href="#andrespol" /> 
+			<area shape="poly" alt="brojce" title="brojce" coords="252,268,268,261,276,269,281,280,290,300,304,299,319,309,309,357,316,362,306,366,300,365,293,369,292,345,289,338,264,339,260,347,252,358,245,367,239,373,218,360,208,381,207,366,202,362,213,331,202,328,203,318,176,311,178,292,175,284,181,272,190,273,212,283,208,295,229,297,243,290,254,281" href="#brojce" /> 
+			<area shape="poly" alt="koluszki" title="koluszki" coords="272,261,286,242,287,218,285,207,323,208,327,193,334,197,342,213,354,208,354,188,368,189,381,195,384,187,393,188,393,175,399,171,408,169,418,161,427,169,438,177,459,170,474,173,480,169,481,176,492,185,489,197,476,198,464,228,475,235,496,230,499,220,512,227,520,215,516,210,531,214,529,224,533,228,522,229,510,243,509,251,503,256,509,262,502,270,501,277,479,316,454,321,448,311,450,304,440,289,433,280,420,281,406,274,366,259,365,276,361,277,360,264,338,257,322,283,328,290,326,298,317,302,307,296,299,297,293,290,285,276" href="#koluszki" /> 
+			<area shape="poly" alt="nowosolna" title="nowosolna" coords="244,195,250,187,270,169,260,181,273,155,271,125,264,123,264,111,250,101,262,75,258,64,245,64,224,61,220,75,209,79,201,85,193,92,184,88,170,99,167,112,179,117,191,110,226,117,228,131,229,146,225,166,234,179,229,187,233,194" href="#nowosolna" /> 
+			<area shape="poly" alt="rzgow" title="rzgow" coords="200,357,209,332,198,330,199,321,187,316,174,315,172,305,174,293,171,285,158,285,157,292,139,294,132,284,117,281,99,283,101,297,75,299,75,308,74,331,73,351,62,370,82,384,90,379,93,370,104,362,121,367,138,362,137,351" href="#rzgow" /> 
+			<area shape="poly" alt="tuszyn" title="tuszyn" coords="198,363,141,355,140,363,123,371,111,370,100,370,93,385,92,393,83,404,96,405,99,413,108,421,98,426,96,440,91,445,99,450,109,458,104,487,112,488,113,502,127,499,130,513,157,513,164,527,192,529,208,533,206,521,217,480,223,482,201,444,207,424,218,423,224,403,218,388,201,383,203,369" href="#tuszyn" /> 
+		</map> 
+	</div>
+
+	<div id="brief" style="text-align: center; padding: 50px">
+		<p class="brief-font"><b>Brief<b></p>
+
+		<div style="float:left; font-size: 24px;">
+			<span style="display:inline; font-weight: normal">
+				This is my page created as project in
+			</span>
+			<span style="display:inline; font-weight: bold;">
+				Graphics in computer services
+			</span>
+			<span style="display:inline; font-weight: normal">
+				subject.
+			</span>
+		</div>
+
+	</div>
+	
+	<div id="contact" style="text-align: center; padding: 50px">
+		<p class="brief-font"><b>Contact<b></p>
+
+		<a href="https://www.github.com/epoll-reactor">
+			<img src="github_logo.png">
+		</a>
+
+		<a href="https://www.linkedin.com/in/dawid-k-613a88219/">
+			<img src="linkedin_logo.png">
+		</a>
+	</div>
+</body>
+</html>

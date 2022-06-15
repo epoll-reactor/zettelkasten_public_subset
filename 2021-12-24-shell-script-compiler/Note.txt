@@ -1,0 +1,2 @@
+Существует компилятор для Bash:
+https://en.wikipedia.org/wiki/Shc_(shell_script_compiler).

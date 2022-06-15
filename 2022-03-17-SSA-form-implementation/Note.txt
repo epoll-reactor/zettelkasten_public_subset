@@ -1,0 +1,41 @@
+1) AST-узел переменной должен содержать SSA index (целое число).
+
+class ASTSymbol : ... {
+  int SSAIndex;
+  ...
+}
+
+2) Должен быть реализован блок Control Flow Graph такого вида
+
+class CFGBlock {
+  // Индекс блока во всей программе.
+  int Index;
+
+  // Имя блока.
+  string Label;
+
+  // Выражения, содержащиеся в блоке.
+  array<AST> Statements;
+  
+  // Список блоков-преемников (находящихся снизу).
+  array<CFGBlock *> Successors;
+
+  // Список блоков-предшественников (находящихся сверху).
+  array<CFGBlock *> Predecessors;
+
+  // Блок-доминатор (пока неизвестно, для каких целей).
+  CFGBlock *Dominator;
+
+  // Список блоков, над которыми мы доминируем.
+  array<CFGBlock *> DominatingBlocks;
+
+  // Вернуть строку вида "CFG#{Index} {Label}".
+  string StringValue();
+
+  // Добавить AST-узел в наш список выражений (без условий, переходов и т.д).
+  void AddStatement(AST *);
+
+  // Соединить 2 блока, то есть в Pred.Successors добавить Succ, а
+                                в Succ.Predecessors добавить Pred.
+  void AddLink(CFGBlock *Pred, CFGBlock *Succ);
+}

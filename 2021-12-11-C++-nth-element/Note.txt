@@ -1,0 +1,9 @@
+std::nth_element(beg, mid, end)
+
+Установить в диапазон [beg, mid).
+
+Найти 5 людей с наименьшим балансом:
+  std::nth_element(v.begin(), v.begin() + 4, v.end())
+
+Найти 5 людей с наибольшим балансом:
+  std::nth_element(v.begin(), v.begin() + 4, v.end(), std::greater<>{})

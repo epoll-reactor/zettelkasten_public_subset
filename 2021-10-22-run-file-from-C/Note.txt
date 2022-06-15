@@ -1,0 +1,17 @@
+Стандартная библиотека Си позволяет запускать файлы.
+
+#include <stdio.h>
+#include <unistd.h>
+
+int main() {
+	pid_t child_process_pid = fork();
+	if (child_process_pid == 0) {
+		printf("Fork returns a valid pid in the parent process. Parent executes this.\n");
+		printf("Finishing child process...\n");
+	} else {
+		printf("Fork returns 0 in the child process. Child executes this.\n");
+		printf("Showing ls output...\n\n");
+		char *argv[] = { "ls", "-lF", "/", NULL };
+		execvp("ls", argv);
+	}
+}

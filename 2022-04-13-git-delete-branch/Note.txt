@@ -1,0 +1,4 @@
+Достаточно странный синтаксис удаления ветки
+  git push origin :parser-fix,
+что является тем же, что
+  git push origin --delete parser-fix.

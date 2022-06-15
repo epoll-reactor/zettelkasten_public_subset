@@ -1,0 +1,49 @@
+Команда - шаблон проектирования представляющий собой
+средство общения между разными частями приложения,
+прослойку, например, между бизнес-логикой и пользовательского
+интерфейса.
+В основе лежит принцип callback'ов.
+Предполагается создание классов с единственной функцией вызова - команды.
+
+class Command {
+	Application app
+	Editor editor
+	String backup
+
+	constructor
+
+	save_backup()
+		...
+
+	undo()
+		...
+
+	abstract execute()
+}
+
+class CopyCommand < Command {
+	execute()
+		app.clipboard = editor.get_selection()
+}
+
+/// Класс редактора отрабатывает роль "получателя".
+/// Команды делегируют ему свою работу
+
+class Editor {
+	get_selection()
+		...
+}
+
+class Application {
+	create_UI()
+		copy = function() {
+			execute_command(
+				new CopyCommand(this, active_editor)
+			)
+		}
+		copy_button.set_command(copy)
+		shortcuts.on_keypress("Ctrl+C")
+
+	execute_command(Command c)
+		c.execute()
+}

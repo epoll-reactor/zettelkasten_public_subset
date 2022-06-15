@@ -1,0 +1,61 @@
+Интерфейсы - типы, не содержащие полей и обычно определяющие методы без реализации.
+Каждый интерфейс неявно абстрактный.
+  interface Interface {
+    int ACTION_ADD = 0;
+
+    void select(int action);
+  }
+
+Интерфейсы можно "реализовывать":
+  interface Interface {
+    void request();
+  }
+  class Implementation implements Interface {
+    public void request() {
+      // Реализация метода интерфейса
+    }
+  }
+
+  Interface impl = new Implementation();
+  impl.request();
+
+Интерфейс является функциональным интерфейсом, если он реализовывает один метод.
+В таком случае реализация может быть записана как лямбда-выражение вместо определения
+класса.
+  @FunctionalInterface
+  interface Calculation {
+    int calculate(int left, int right)
+  }
+  // Метод, принимающий интерфейс
+  int calculate(Calculation calc) {
+  	calc.calculate(1, 2);
+  }
+  // Использование лямбда-выражения для вызова метода
+  calculate((left, right) -> left + right);
+  // Вызов
+  calculate(new Calculation() {
+    @Override
+    public int calculate(int left, int right) {
+      return left + right;
+    }
+  });
+
+Интерфейс можно реализовать как лямбда-функцию:
+  interface StringExtender {
+    String extendString(String input);
+  }
+
+  StringExtender extender = input -> input + " Extended";
+
+Интерфейсы могут наследовать другие интерфейсы подобно классам. В отличие от классов, интерфейсы
+поддерживают множественное наследование. Если несколько унаследованных интерфейсов имеют одно и
+то же имя переменной, возникает неоднозначность.
+  interface EventListener extends ActionListener, RequestListener {}
+
+Интерфейсы поддерживают функции, определённые по умолчанию. Если имплементатор интерфейса не реали-
+зует эти функции, вызывается стандартная реализация.
+
+Интерфейсы имеют возможность писать static методы. Эффект тот же, как и в классах.
+
+Интерфейсы имеют private методы. Их можно вызвать только из default методов, они недоступны
+в реализациях такого интерфейса.

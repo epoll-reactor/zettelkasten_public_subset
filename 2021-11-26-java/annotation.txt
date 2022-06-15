@@ -1,0 +1,53 @@
+Аннотации - способ предоставить мета-информацию программе.
+Аннотации могут иметь различные правила. Аннотация @Retention устанавливает
+уровень видимости аннотаций.
+  RetentionPolicy.SOURCE  - хранит данные лишь в исходном коде
+  RetentionPolicy.CLASS   - хранит данные также в .class файлах
+  RetentionPolicy.RUNTIME - даёт доступ JVM к данным внутри аннотации.
+
+@Retention доступен только для @interface.
+
+Если аннотация имеет 1 параметр, имя параметра может быть опущено.
+     @BlockingOperations(true)
+  // @BlockingOperations(fileSystemOperations = true)
+
+Аннотация
+  @interface MyAnnotation {
+    String word;
+  }
+принимает вид:
+  @MyAnnotation("Hello")
+
+Аннотации могут иметь default значения (установленные по умолчанию).
+
+Пример использования:
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Method;
+
+@Retention(RetentionPolicy.RUNTIME)
+@interface MyAnnotation {
+    String reason() default "none";
+    int countOfErrors() default 0;
+}
+
+class GetAnnotationWithReflection {
+    @MyAnnotation(reason = "text", countOfErrors = 2)
+    // or @MyAnnotation
+    public static void get_annotation(int parameter) {
+        GetAnnotationWithReflection object = new GetAnnotationWithReflection();
+        try {
+            Class<?> c = object.getClass();
+            Method main = c.getMethod("get_annotation", int.class);
+            MyAnnotation annotation = main.getAnnotation(MyAnnotation.class);
+            System.out.println(annotation.reason() + " " + annotation.countOfErrors());
+        } catch (NoSuchMethodException ex) {
+            System.out.println("Method not found");
+        }
+    }
+
+    public static void main(String[] args) {
+        get_annotation(42);
+    }
+}

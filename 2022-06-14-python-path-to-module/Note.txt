@@ -1,0 +1,2 @@
+Путь к библиотеке в питоне:
+print(os.path.abspath(lib.__file__))

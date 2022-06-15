@@ -1,0 +1,31 @@
+Таблица символов - структура данных, использующаяся в разработке языков
+программирования, хранящая информацию о объявлениях переменных и их свойства.
+
+Записи таблицы символов используются в процессе лексического, синтаксического и
+семантического анализа. Обычно синтаксический анализатор отличает разные объявления
+одного и того же символа в разных блоках, чем лексический.
+
+Пример реализации на Java:
+
+public class SymbolTable {
+	private HashTable table;
+	protected SymbolTable prev;
+
+	public SymbolTable(SymbolTable st) {
+		table = new HashTable(); prev = st;
+	}
+	public void put(String s, Symbol sym) {
+		table.put(s, sym);
+	}
+	public Symbol get(String s) {
+		for (SymbolTable t = this; t != null; t = t.prev) {
+			Symbol found = (Symbol)(t.table.get(s));
+			if (found != null) return found;
+		}
+		return null;
+	}
+}
+
+Этот алгоритм ищет символ от самого внутреннего к самому внешнему блоку.
+
+Видно, что связанные в цепочки таблицы символов образуют список.

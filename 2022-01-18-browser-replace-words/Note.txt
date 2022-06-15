@@ -1,0 +1,6 @@
+function the(it, cb) {
+  for(let i = 0; i < it.childElementCount; i++) the(it.children[i], cb);
+  cb(it);
+}
+
+the(document.body, it => { if(it.childElementCount <= 0) it.innerText = "So tasty" })

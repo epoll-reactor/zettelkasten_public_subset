@@ -1,0 +1,20 @@
+Multipurpose Internet Mail Extensions (MIME) - универсальный стандарт дополнений к сетевым протоколам
+уровня приложения, использующийся для указания заголовков ("хедеров"), содержащих информацию о вложенных
+файлах, тексте и т.д..
+
+Пример MIME: 
+  Content-Type: multipart/mixed; boundary=frontier                // Указание типа вложения и разделителя.
+                                                                  // Необходимый \r\n
+  This is a message with multiple parts in MIME format.           // Одна или несколько строк сообщения,
+  --frontier                                                      // которые прерываются разделителем.
+  Content-Type: text/plain                                        // Следующая часть, и так далее...
+                                                                  // ...
+  This is the body of the message.
+  --frontier
+  Content-Type: application/octet-stream
+  Content-Transfer-Encoding: base64
+
+  PGh0bWw+CiAgPGhlYWQ+CiAgPC9oZWFkPgogIDxib2R5PgogICAgPHA+VGhpcyBpcyB0aGUg
+  Ym9keSBvZiB0aGUgbWVzc2FnZS48L3A+CiAgPC9ib2R5Pgo8L2h0bWw+Cg==
+
+MIME успешно используется с SMTP, POP, HTTP.

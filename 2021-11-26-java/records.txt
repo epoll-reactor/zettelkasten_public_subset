@@ -1,0 +1,17 @@
+Record - это data-class.
+Например, public record Person (String name, String address) {} является классом,
+реализующим подобный конструктор:
+  public Person(String name, String address) {
+      this.name = name;
+      this.address = address;
+  },
+после чего мы можем использовать его, например так:
+  Person human = new Person("John", "str. 123")
+  human.name;
+  human.address;
+
+Статические переменные в record-классах:
+  public record Person(String name, String address) {
+      public static String UNKNOWN_ADDRESS = "Unknown";
+  }
+  Person.UNKNOWN_ADDRESS;

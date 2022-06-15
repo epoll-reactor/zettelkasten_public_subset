@@ -1,0 +1,37 @@
+#include <iostream>
+#include <vector>
+
+template <typename Module>
+struct a {
+  Module* module_;
+  Module& push_from_a() { module_->container_.push_back(1); return static_cast<Module&>(*this); }
+};
+
+template <typename Module>
+struct b {
+  Module* module_;
+  Module& push_from_b() { module_->container_.push_back(2); return static_cast<Module&>(*this); }
+};
+
+template <typename Module>
+struct c {
+  Module* module_;
+  Module& push_from_c() { module_->container_.push_back(3); return static_cast<Module&>(*this); }
+};
+
+template <typename Container, template <typename...> typename... Modules>
+struct module : Modules<module<Container, a, b, c>>... {
+  Container& container_;
+
+  module(Container& container)
+    : Modules<module<Container, a, b, c>>{this}...
+    , container_(container) {}
+};
+
+int main() {
+  std::vector<int> v;
+  module<std::vector<int>, a, b, c> module(v);
+  module.push_from_a().push_from_b().push_from_c();
+  for (auto i : v)
+    std::cout << i << ' ';
+}

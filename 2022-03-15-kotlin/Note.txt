@@ -1,0 +1,145 @@
+Точка входа как и везде находится в функции main.
+
+Функции записываются с типом после имени переменной, как
+  fun sum(a: Int, b: Int): Int {
+    return a + b
+  }
+  или же в форме выражения
+  fun sum(a: Int, b: Int) = a + b
+
+Если функция не возвращает значения, такой тип вместо привычного void называется Unit.
+  void print(value: Int): Unit {
+    println("Value: $value")
+  },
+  обычно Unit опускается,
+  void print(value: Int) {
+  	
+  }
+
+Константные переменные инициализируются со словом val,
+  val a: Int = 0 // тип Int указан явно
+  val b = 1 // тип Int выведен
+  val c: Int // тип обязателен, если мы не присваиваем значение
+  c = 2 // присваивание
+
+Изменяемые переменные инициализируются со словом var,
+  var x = 5
+  x += 1
+
+Переменные могут быть объявлены в глобальной области видимости.
+
+Классы.
+Свойства классов могут быть указаны в скобках или внутри тела,
+  class Rectangle(var height: Double, var length: Double) {
+    var perimeter = (height + length) * 2
+  }
+
+  val rectangle = Rectangle(5.0, 2.0)
+  println("The perimeter is ${rectangle.perimeter}")
+
+Наследование указывается через ":" как в Python,
+  class Rectangle(var height: Double, var length: Double): Shape() {
+  	var perimeter = (height + length) * 2
+  }
+
+Комментарии как в С++, но многострочные комментарии могут быть вложенными.
+
+Условия.
+  fun maxOf(a: Int, b: Int): Int {
+    if (a > b) {
+      return a
+    } else {
+      return b
+    }
+  }
+  Или короче
+  fun maxOf(a: Int, b: Int) = if (a > b) a else b
+If используется как выражение.
+
+For.
+  val items = listOf("apple", "banana", "kiwifruit")
+  for (item in items) {
+    println(item)
+  }
+  или
+  for (index in items.indices) {
+    println("item at $index is ${items[index]}");
+  }
+
+While.
+  var index = 0
+  while (index < items.size) {
+    println("item at $index is ${items[index]}")
+    index++
+  }
+
+When.
+  fun describe(obj: Any): String =
+    when (obj) {
+      1          -> "One"
+      "Hello"    -> "Greeting"
+      is long    -> "Long"
+      !is String -> "Not a string"
+      else       -> "Unknown"
+    }
+
+  when {
+    "orange" in items -> println("juicy")
+    "apple" in items -> println("apple fine too")
+  }
+
+Диапазоны.
+  val x = 10
+  val y = 9
+  if (x in 1..y+1) {
+    println("fits in range")
+  }
+
+  for (x in 1..10 /* step 2 */) {
+    println(x)
+  }
+  for (x in 9 downTo 0 step 3) {
+  	println(x)
+  }
+
+Nullable-типы.
+  fun parseInt(str: String): Int? {
+    // ...
+  }
+
+  fun printProduct(arg1: String, arg2: String) {
+    val x = parseInt(arg1)
+    val y = parseInt(arg2)
+
+    if (x != null && y != null) {
+      println(x * y)
+    } else {
+      println("'$arg1' or '$arg2' is not a number")
+    }
+  }
+
+Автоматическое приведение типа.
+  fun getStringLength(obj: Any): Int? {
+    if (obj is String) {
+      // obj теперь имеет тип String
+      return obj.length
+    }
+    // obj опять имеет тип Any
+    return null
+  }
+  или
+  fun getStringLength(obj: Any): Int? {
+    if (obj !is String) return null
+
+    return obj.length
+  }
+
+Suspend-функции используются в контексте корутин. Например в Ktor,
+  suspend fun respondDialog(call: ApplicationCall, dialog: Dialog) {
+      call.respond(
+          FreeMarkerContent(
+          "src/main/resources/files/dialog.html",
+          mapOf("dialog" to dialog), "name")
+      )
+  }
+помечена как suspend потому, что call.respond -- suspend-функция.

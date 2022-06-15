@@ -1,0 +1,32 @@
+Заменить регистры:
+  tr "[:lower:]" "[:upper:]" <<< "linux"
+    LINUX
+
+  tr a-z A-Z <<< "linux"
+    LINUX
+
+  tr a-z A-Z < text.txt > output.txt
+    output.txt: LINUX
+
+Заменить пробелы на символы новой строки:
+  tr "[:space:]" '\n' <<< "One Two Three"
+    One
+    Two
+    Three
+
+Замена "всех, кроме":
+  tr -c 'b' 'a' <<< "abcdefg"
+    abaaaaaa
+
+Заменить последовательность одинаковых символов на один:
+  tr -s ' ' '_' <<< "a b c d d     e"
+    a_b_c_d_d_e
+
+Удаление:
+  tr -d 'Pyt' <<< "Python"
+    hon
+
+Искать только диапазон:
+  tr -cd 0-9 <<< "abc 123"
+    123
+

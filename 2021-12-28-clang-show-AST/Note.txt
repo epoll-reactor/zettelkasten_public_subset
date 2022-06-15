@@ -1,0 +1,48 @@
+Clang имеет возможность представлять программу в виде AST. Пример:
+
+int main() {
+  int result = 0;
+  for (int i = 0; i < 10; ++i) {
+    result++;
+  }
+  return 0;
+}
+
+  ->
+
+TranslationUnitDecl 0x55e2fdbef618 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x55e2fdbeff20 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x55e2fdbefbc0 '__int128'
+|-TypedefDecl 0x55e2fdbeff90 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x55e2fdbefbe0 'unsigned __int128'
+|-TypedefDecl 0x55e2fdbf0308 <<invalid sloc>> <invalid sloc> implicit __NSConstantString '__NSConstantString_tag'
+| `-RecordType 0x55e2fdbf0080 '__NSConstantString_tag'
+|   `-CXXRecord 0x55e2fdbeffe8 '__NSConstantString_tag'
+|-TypedefDecl 0x55e2fdbf03a0 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x55e2fdbf0360 'char *'
+|   `-BuiltinType 0x55e2fdbef6c0 'char'
+|-TypedefDecl 0x55e2fdc30e98 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list '__va_list_tag [1]'
+| `-ConstantArrayType 0x55e2fdc30e40 '__va_list_tag [1]' 1 
+|   `-RecordType 0x55e2fdbf0490 '__va_list_tag'
+|     `-CXXRecord 0x55e2fdbf03f8 '__va_list_tag'
+`-FunctionDecl 0x55e2fdc30f40 <test.cpp:1:1, line:7:1> line:1:5 main 'int ()'
+  `-CompoundStmt 0x55e2fdc31328 <col:12, line:7:1>
+    |-DeclStmt 0x55e2fdc310f0 <line:2:2, col:16>
+    | `-VarDecl 0x55e2fdc31068 <col:2, col:15> col:6 used result 'int' cinit
+    |   `-IntegerLiteral 0x55e2fdc310d0 <col:15> 'int' 0
+    |-ForStmt 0x55e2fdc312c0 <line:3:2, line:5:2>
+    | |-DeclStmt 0x55e2fdc311a8 <line:3:7, col:16>
+    | | `-VarDecl 0x55e2fdc31120 <col:7, col:15> col:11 used i 'int' cinit
+    | |   `-IntegerLiteral 0x55e2fdc31188 <col:15> 'int' 0
+    | |-<<<NULL>>>
+    | |-BinaryOperator 0x55e2fdc31218 <col:18, col:22> 'bool' '<'
+    | | |-ImplicitCastExpr 0x55e2fdc31200 <col:18> 'int' <LValueToRValue>
+    | | | `-DeclRefExpr 0x55e2fdc311c0 <col:18> 'int' lvalue Var 0x55e2fdc31120 'i' 'int'
+    | | `-IntegerLiteral 0x55e2fdc311e0 <col:22> 'int' 10
+    | |-UnaryOperator 0x55e2fdc31258 <col:26, col:28> 'int' lvalue prefix '++'
+    | | `-DeclRefExpr 0x55e2fdc31238 <col:28> 'int' lvalue Var 0x55e2fdc31120 'i' 'int'
+    | `-CompoundStmt 0x55e2fdc312a8 <col:31, line:5:2>
+    |   `-UnaryOperator 0x55e2fdc31290 <line:4:3, col:9> 'int' postfix '++'
+    |     `-DeclRefExpr 0x55e2fdc31270 <col:3> 'int' lvalue Var 0x55e2fdc31068 'result' 'int'
+    `-ReturnStmt 0x55e2fdc31318 <line:6:2, col:9>
+      `-IntegerLiteral 0x55e2fdc312f8 <col:9> 'int' 0

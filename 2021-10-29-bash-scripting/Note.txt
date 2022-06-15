@@ -1,0 +1,306 @@
+Объявление переменной:
+  STRING="Hello World"
+  echo $STRING || echo "$STRING" || echo "${STRING}"
+
+Функции:
+  function bash() {
+  	echo "Args: $1 $2 $3"
+  }
+  bash a b c
+
+Чтение из STDIN:
+  read word
+  echo $word
+
+Обработка сигналов:
+  trap bashtrap FPE
+  fpe_trap() {
+  	echo "SIGFPE GOT"
+  }
+  for a in `seq 1 100`; do
+  	echo "$a / 10 to exit"
+  	sleep 1;
+  done
+
+Массивы:
+  array=('Bash' 'Zsh' 'Fish')
+  size=${#array[@]}
+  
+  for (( i=0; i<$size; i++)); do
+    echo ${array[$i]}
+  done
+
+Существует ли директория:
+  dir="/asd"
+  if [ -d $dir ]; then
+    echo "Directory exists"
+  else
+    echo "Directory doesn't exists"
+  fi
+  
+Сравнения чисел:
+  -lt <
+  -gt >
+  -le <=
+  -ge >=
+  -eq ==
+  -ne !=
+  
+  if [ 1 -lt 2 ]; then
+    echo "1"
+  else
+    echo "2"
+  fi
+  
+Сравнения строк:
+  =
+  !=
+  <
+  >
+  -n $ARG - !empty
+  -z $ARG -  empty
+
+  if [ "A" != "B" ]; then
+    echo "1"
+  else
+    echo "2"
+  fi
+  
+Проверки с файлами:
+  -b - блочное устройство
+  -c - специальный символьный файл
+  -d - директория
+  -e - проверка существует ли файл
+  -f - не директория
+  -G - проверка существует ли файл и пренадлежит группе
+  -k - sticky bit
+  -L - символическая ссылка
+  -r - открыт для чтения
+  -S - сокет
+  -s - ненулевой размер
+  -u - проверка set-ser-id
+  -w - открыт для записи
+  -x - выполняемый
+
+  if [ -b "/dev/sda1" ]; then
+    echo "Block"
+  else
+    echo "Non block"
+  fi
+
+Select:
+  select word in "linux" "bash" "scripting" "tutorial" 
+  do
+    echo "The word you have selected is: $word"
+    break  
+  done
+
+Switch-case:
+  case 212 in
+    1) echo "1";;
+    2) echo "2";;
+    3) echo "3";;
+    4) echo "4";;
+    *) echo "miss";;
+  esac
+  
+Экранизация:
+  var="text"
+  echo $var  -> text
+  echo \$var -> $var
+  echo "\\"  -> \
+  
+Одиночные кавычки:
+  var="text"
+  echo '$var' -> $var
+
+Арифметика:
+  let result=$1+$2
+  echo "result: $result"
+  echo "result: $(($1 + $2))" 
+
+  echo 4 + 5 = $((4 + 5))   ->   9
+  echo 7 - 7 = $[ 7 - 7 ]   ->   0
+  echo 4 x 6 = $((3 * 2))   ->   6
+  echo 6 / 3 = $((6 / 3))   ->   2
+  echo 8 % 7 = $((8 % 7))   ->   1
+  echo 2 ^ 8 = $[ 2 ** 8 ]  -> 256
+  
+  Округление:
+  floating_point_number=3.141
+  echo $floating_point_number
+  # round
+  for bash_rounded_number in $(printf %.0f $floating_point_number); do
+    echo "Rounded number with bash: $bash_rounded_number"
+  done
+
+Перенаправления потоков:
+  STDOUT -> STDERR - 1>&2
+  STDERR -> STDOUT - 2>&1
+
+Пайпы и перенаправления:
+  wc -l < <(ls /)
+  cat < <(date)
+  diff <(ls dir1/*) <(ls dir2/*)
+  bc <<< 5*2, что эквивалентно echo '5*2' | bc
+  fgrep A <<< "AAA"
+
+  <<< создаёт временный файл.
+
+Условное выполнение:
+  echo "a" || echo "b" -> a
+  non-existence-command
+           || echo "b" -> b
+
+  Если первая команда успешно выполнена, вторая не
+  выполняется, иначе выполняется.
+
+IFS:
+  IFS - Internal Field Separator.
+  set w x y z; IFS=":"; echo "$*" -> w:x:y:z
+  set w x y z; IFS="-"; echo "$*" -> w-x-y-z
+
+Множества символов:
+  {a,b}   -> a b
+  {a,b}.c -> a.c b.c
+  {1..5}  -> 1 2 3 4 5
+
+Замена:
+  name="John"
+  echo ${name}         -> John
+  echo ${name/J/j}     -> john
+  echo ${name:0:2}     -> Jo
+  echo ${name::2}      -> Jo
+  echo ${name::-1}     -> Joh
+  echo ${name:(-1)}    -> n (slicing from right)
+  echo ${name:(-2):1}  -> h (slicing from right)
+  echo ${food:-Cake}   -> $food or "Cake"
+  
+  str="/path/to/foo.cpp"
+  echo ${str%.cpp}     # -> /path/to/foo
+  echo ${str%.cpp}.o   # -> /path/to/foo.o
+  echo ${str%/*}       # -> /path/to
+  echo ${str##*.}      # -> cpp (extension)
+  echo ${str##*/}      # -> foo.cpp (basepath)
+  echo ${str#*/}       # -> path/to/foo.cpp
+  echo ${str##*/}      # -> foo.cpp
+  echo ${str/foo/bar}  # -> /path/to/bar.cpp
+  
+  echo ${str#/path/}   # -> to/foo.cpp
+  echo ${str%%.cpp}    # -> /path/to/foo (long suffix)
+  echo ${str##/path/}  # -> /to/foo.cpp  (long prefix)
+  echo ${str/foo/bar}  # -> /path/to/bar.cpp (first match)
+  echo ${str//foo/bar} # -> /path/to/bar.cpp (replace all)
+
+Размерность:
+  str="1 2 3"
+  array=(1 2 3)
+  echo ${#str}         # string length
+  echo ${#array[@]}    # array length
+  
+Многострочные комментарии:
+  : '
+  This is
+  multiline commen
+  t
+  '
+
+Подстроки:
+  str="12345"
+  echo ${str:0:1}    # -> 1
+  echo ${str:(-1):1} # -> 5
+  
+Манипуляция регистром:
+  str="HELLO WORLD"
+  echo ${str,}   # -> Первый символ в нижнем регистре
+  echo ${str,,}  # -> Всё в нижнем регистре
+  echo ${str^}   # -> Первый символ в верхнем регистре
+  echo ${str^^}  # -> Всё в верхнем регистре
+
+Циклы:
+  for i in /etc/rc.*; do
+    echo $i
+  done
+
+  for ((i = 0 ; i < 100 ; i++)); do
+    echo $i
+  done
+
+  for i in {1..5}; do
+      echo "$i"
+  done
+
+            Старт
+            v   Финиш
+                v  Шаг
+                   v
+  for i in {5..50..5}; do
+      echo "$i"
+  done
+
+  cat file.txt | while read line; do
+    echo $line
+  done
+
+  while true; do
+    ···
+  done
+
+Регулярные выражения в условных:
+   if [[ "123.111.222" =~ ([0-9]{3}\.?){3} ]]; then
+     echo "a"
+   fi
+
+Операции с массивами:
+  Fruits=('Apple' 'Banana' 'Orange')
+  Fruits=("${Fruits[@]}" "Watermelon")    # Добавить
+  Fruits+=('Watermelon')                  # Также добавить
+  Fruits=( ${Fruits[@]/Ap*/} )            # Удалить по регулярному выражению
+  unset Fruits[2]                         # Удалить по индексу
+  Fruits=("${Fruits[@]}")                 # Дублирование
+  Fruits=("${Fruits[@]}" "${Veggies[@]}") # Конкатенация
+  lines=(`cat "logfile"`)                 # Чтение из файла в массив
+
+Словари:
+  declare -A map
+  map[dog]="bark"
+  map[cow]="moo"
+  map[bird]="tweet"
+  map[wolf]="howl"
+ 
+  echo ${map[dog]}  # Звук собаки
+  echo ${map[@]}    # Все значения
+  echo ${!map[@]}   # Все ключи
+  echo ${#map[@]}   # Размер словаря
+  unset map[dog]    # Убийство собаки :(, (удаление элемента)
+  echo ${map[@]}    # Вывод в STDOUT всех элементов
+ 
+Создание нового сеанса Bash (subshell):
+  (cd /; echo "I'm in $PWD")
+  pwd # Still in first directory
+
+Проверка результата команды:
+  if ping -c 1 google.com; then
+    echo "Похоже, с интернет-соединением всё ОК"
+  fi
+
+Проверка с помощью grep:
+  if grep -q 'foo' ~/.bash_history; then
+    echo "Найдена запись \"foo\""
+  fi
+
+Другой способ указания диапазона:
+  ls -l /dev/tty[1-3]
+  crw--w---- 1 root tty 4, 1 Apr 20 14:01 /dev/tty1
+  crw--w---- 1 root tty 4, 2 Apr 20 14:01 /dev/tty2
+  crw--w---- 1 root tty 4, 3 Apr 20 14:01 /dev/tty3
+
+Тонкость выполнения от root:
+  sudo echo "Hi" > /proc/file не выполнится, потому что
+  перенаправление делается шеллом, и sudo к нему не применяется.
+  Вместо этого, можно сделать echo "Hi" | sudo tee /proc/file.
+
+=() и <():
+  В команде
+    sed 's/[Gg]oogle/Yandex/g' =(curl https://www.google.com) | if grep "Google" $1; then rm -rf /; fi
+  вместо <() нужен =(), так как =() использует временный файл, а <() использует файл в /dev/fd.

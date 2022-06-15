@@ -1,0 +1,1 @@
+mogrify -resize 512x512! $filename;

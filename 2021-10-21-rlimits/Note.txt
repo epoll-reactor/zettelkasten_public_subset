@@ -1,0 +1,42 @@
+Каждый процесс в Linux использует отведённое ему количество ресурсов (память,
+время ЦПУ и т.д). Поскольку ресурсы не бесконечны, нам нужен инструмент, чтобы
+ими управлять.
+
+3 главных системных вызова для таких операций:
+
+int getrlimit(int resource, struct rlimit *rlim);
+
+int setrlimit(int resource, const struct rlimit *rlim);
+
+int prlimit(pid_t pid, int resource,
+            const struct rlimit *new_limit,
+                  struct rlimit *old_limit);
+
+Первые два вызова позволяют получать и устанавливать лимиты. prlimit - расши-
+рение предыдуших двух вызовов - он позволяет получать и устанавливать лимиты
+по PID процесса.
+
+Существуют "soft" и "hard" лимиты:
+
+struct rlimit {
+    rlim_t rlim_cur; /* Soft limit */
+    rlim_t rlim_max; /* Hart limit (ceiling from rlim_cur) */
+};
+
+Например, чтобы установить ограничение на максимум 3 открытых файла для
+процесса и получить предыдущие:
+
+struct rlimit old_lim;
+if (getrlimit(RLIMIT_NOFILE, &old_lim) == -1)
+    perror("getrlimit");
+
+struct rlimit lim;
+lim.rlim_cur = 3;
+lim.rlim_max = 1024;
+
+if (setrlimit(RLIMIT_NOFILE, &lim) == -1)
+    perror("setrlimit");
+
+struct rlimit new_lim;
+if (getrlimit(RLIMIT_NOFILE, &new_lim) == -1)
+    perror("getrlimit");

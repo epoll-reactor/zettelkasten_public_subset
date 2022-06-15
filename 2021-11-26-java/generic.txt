@@ -1,0 +1,44 @@
+Генерики позволяют писать обобщённый код наподобие шаблонного программирования в С++.
+
+Например:
+  // T должен быть подтипом ArrayList и реализовывать интерфейс Formattable.
+  public class Mapper<T extends ArrayList & Formattable, V> {
+    public void add(T array, V item) {
+      array.add(item);
+    }
+  }
+
+Инстанцирование:
+  Mapper<CustomList, Integer> mapper = new Mapper<CustomList, Integer>();
+
+С Java SE 7 можно использовать оператор <>:
+  Mapper<CustomList, Integer> mapper = new Mapper<>();
+
+Параметризованные типы генериков:
+  Mapper<CustomList, ?> mapper;
+  mapper = new Mapper<CustomList, Boolean>();
+  mapper = new Mapper<CustomList, Integer>();
+
+  // Принимает лишь то, что является подклассом Number в качестве второго параметра
+  void addMapper(Mapper<?, ? extends Number> mapper) {}
+
+Шаблонный конструктор выглядит так:
+  class Mapper {
+    <T, V> Mapper(T array, V item) {}
+  }
+  
+Методы так:
+  static <T, V extends T> boolean contains(T item, V[] array) {}
+
+Шаблонные интерфейсы:
+  interface Expandable<T extends Number> {
+    void addItem(T item);
+  }
+
+  class Array<T extends Number> implements Expandable<T> {
+    void addItem(T item) {}
+  }
+
+  class IntegerArray implements Expandable<Integer> {
+    void addItem(Integer integer) {}
+  }

@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <stdint.h>
+#include <assert.h>
+
+#define ASCII_DIGIT_OFFSET 48
+
+int main() {
+  char data[] = "11223344";
+  
+  uint32_t encoded = 0;
+  for (int32_t i = 7; i >= 0; --i) {
+  	encoded |= (data[7 - i] - ASCII_DIGIT_OFFSET) << (i * 4);
+  }
+
+  char decoded[9];
+  for (int32_t buffer_index = 0,
+               mask         = 0xF0000000,
+               shift        = 28; buffer_index < 8;
+               ++buffer_index,
+               mask = (mask >> 4) & (~mask),
+               shift -= 4) {
+    decoded[buffer_index] = ((char)((encoded & mask) >> shift) + ASCII_DIGIT_OFFSET);
+  }
+  decoded[8] = 0;
+  printf("%s\n", decoded); 
+}

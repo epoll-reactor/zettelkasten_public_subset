@@ -1,0 +1,17 @@
+test.d:
+  import std.stdio;
+
+  extern (C++) void call_from_d() {
+    writeln("Dlang function called from C++");
+  }
+
+test.cpp:
+  extern void call_from_d();
+
+  int main() {
+    call_from_d();
+  }
+
+Сборка:
+  dmd -c test.d
+  g++ test.cpp test.o -lphobos2 -lpthread -o test_exec

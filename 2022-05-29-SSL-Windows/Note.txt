@@ -1,0 +1,3 @@
+SSL сертификаты AppData/Roaming/Microsoft/SystemCertificates/My/Certificates.
+
+какой-то бинарный сертификат, содержит название, сайт фирмы, ldap: {...}, Enterprise Issuing CA EU0, моё имя и фамилию, почту.

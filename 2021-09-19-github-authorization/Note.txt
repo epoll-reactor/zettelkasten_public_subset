@@ -1,0 +1,4 @@
+1) cd ~ && ssh-keygen -t rsa
+2) github -> settings -> add SSH key
+   copy contents of ~/.ssh/id_rsa.pub
+3) git remote set-url origin git+ssh://git@github.com/username/reponame.git

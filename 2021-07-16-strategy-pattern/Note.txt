@@ -1,0 +1,66 @@
+Признак хорошо разработанного класса - возможность легко менять поведение
+выбором стратегии выполнения или их комбинаций.
+
+template <
+	typename T,
+	template <typename> typename CheckingPolicy,
+	template <typename> typename ThreadingModel
+>
+class SmartPtr;
+
+Таким образом, можно конструировать разные модели поведения с помощью
+всего одного класса.
+
+using WidgetPtr = SmartPtr<Widget, NoChecking, SingleThreaded>;
+using SafeWidgetPtr = SmartPtr<Widget, EnforceNotNull, SingleThreaded>;
+
+К тому же, стратегии выполнения можно задать по умолчанию и дать пользователю
+возможность использования не вникая в детали реализации.
+
+using WidgetPtr = SmartPtr<
+	Widget
+	// стандартный CheckingPolicy
+	// стандартный ThreadingModel
+>;
+
+Примеры реализаций и описаний стратегий:
+
+template <typename T>
+struct NoChecking
+{
+	static void check(T*) {}
+}
+
+template <typename T>
+struct EnforceNotNull
+{
+	struct NullPointerException : public std::exception { ... };
+	static void check(T* ptr)
+	{
+		if (!ptr) { throw NullPointerException(); }
+	}
+}
+
+Пример использования стратегий в SmartPtr:
+
+template <
+	typename T,
+	template <typename> typename CheckingPolicy,
+	template <typename> typename ThreadingModel
+>
+class SmartPtr
+	: public CheckingPolicy<T>
+	, public ThreadingModel
+{
+	...
+	T* operator->()
+	{
+		typename ThreadingModel<SmartPtr>::Lock guarg(*this);
+		CheckingPolicy<T>::check(m_pointer);
+		return m_pointer;
+	}
+
+private:
+	T* m_pointer;
+}
+

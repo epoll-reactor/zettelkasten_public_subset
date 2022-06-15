@@ -1,0 +1,6 @@
+Создание шаблона коммита
+  git config commit.template tools/githooks/git_commit_template
+
+Создание хука перед коммитом
+  cd .git/hooks
+  ln -s ../../githook-code-format.sh pre-commit

@@ -1,0 +1,337 @@
+Если заголовочные файлы указаны в < >, сперва они ищутся в стандартных путях с библиотеками,
+если не нашлись - локально.
+
+Комплексные числа
+Есть функции рассчёта (арк?)синуса, (арк?)косинуса, (арк?)тангенса, (арк?)котангенса,
+гиперболических синусов, косинусов, экспоненты, логарифма, абсолютного значения, степеней,
+корней, фазовый угол (carg), image-часть, коньюкция, проекция, возврат реальной части.
+Также есть макросы
+  CMPLX(double x, double y),
+  CMPLXF(float x, float y),
+  CMPLXL(long double x, long double y)
+
+iscntrl - проверка на управляющий символ '\nftvr'
+isgraph - проверка на любой печатающийся символ кроме пробела
+isprint - проверка на любой печатающийся символ включая пробел
+ispunct - проверка на знак пунктуации
+isxdigit - проверка на HEX-число
+
+errno имеет thread-local storage duration. По умолчанию == 0, что значит "нет ошибки".
+
+<fenv.h> нужен для установки исключений FPU и режимов округления.
+<float.h> содержит множество параметров для типов с плавающей точкой.
+
+<inttypes.h> включает в себя <stdint.h> и расширяет его дополнительными константами, предос-
+тавленными host имплементацией. Нужен для реализации таких функций как fprintf.
+
+<iso646.h> содержит дефайны для битовых операций как в С++.
+
+<locale.h> нужен для установки локалей.
+
+char* setlocale(int category, const char* locale);
+category - по умолчанию установлено в LC_ALL.
+           LC_COLLATE  влияет на поведение функций strcoll, strxfrm.
+           LC_CTYPE    влияет на поведение функций управления символами.
+           LC_MONETARY влияет на валютное (???) форматирование информации из localeconv.
+           LC_NUMERIC  влияет на плавающую точку в числах.
+           LC_TIME     влияет на поведение strftime и wcsftime.
+           
+locale   - окружение. Пояснение ниже.
+           "C" - минимальное окружение.
+           ""  - локально-специфичное окружение.
+вызов setlocale может привести к состоянию гонки.
+
+struct lconv* localeconv(void) возвращает структуру с множеством данных локали, установленной
+с помощью setlocale, таких как валютный знак, название валюты, разделитель чисел с плавающей
+точкой ("," или ".") и т.д.
+
+<math.h>
+
+Если FLT_EVAL_METHOD == 0, float_t и double_t - float и double соответственно.
+Если FLT_EVAL_METHOD == 1, float_t и double_t - оба double.
+Если FLT_EVAL_METHOD == 2, float_t и double_t - оба long double.
+
+Также есть макросы INFINITY и NAN.
+Если определён FP_FAST_FMA, функция fma выполняется так быстро, как это возможно (используется
+соответствующий опкод). Также есть FP_FAST_FMAF и FP_FAST_FMAL.
+
+Каждая функция в <math.h> должна выполняться корректно, не поднимая SIGFPE и не генерируя
+fp-исключения.
+
+Существуют проверки на каноничность, бесконечность, нормальность (!= 0, != NaN, != INF):
+assert(isinf(1.0f / 0.0f) == FP_INFINITE);
+assert(!isnormal(1.0f / 0.0f));
+
+signbit определяет знак числа с плавающей точкой.
+
+Экспоненциальные функции:
+  1) exp   - экспонента по основанию e
+  2) exp2  - экспонента по основанию 2
+  3) expm1 - экспонента по основанию e, минус 1
+  4) frexp - разбивает число с плавающей точкой на нормальную дробь и степень двойки,
+             хранимую в int* exp (втором параметре).
+  5) ldexp - x * 2^exp
+
+Логарифмические функции:
+  1) log   - натуральный логарифм (по основанию e)
+  2) log10 - логарифм по основанию 10
+  3) log1p - логарифм log_e(1 + x)
+  4) log2  - логарифм по основанию 2
+  5) logb  - получает экспоненту x
+
+cbrt      - кубический корень.
+fabs      - абсолютное значение.
+hypot     - сумма корней двух аргументов.
+pow       - степень.
+sqrt      - квадратный корень.
+erf       - рассчёт ошибки по какой-то сложной формуле.
+ceil      - округление в большую сторону.
+floor     - округление в меньшую сторону.
+fmod      - остаток от деления двух чисел.
+remainder - остаток от деления двух чисел по IEC 60559.
+fdim      - положительная разница между двумя числами. if x > y -> x - y, else 0.
+fmax      - максимум.
+fmin      - минимум.
+fmaxmag   - максимум из модулей.
+fminmag   - минимум из модулей.
+fma       - fmadd инструкция (x * y) + z.
+fsqrt     - квадратный корень из числа с плавающей точкой.
+
+Макросы сравнения:
+isgreater, isgreaterequal, isless, islessequal, islessgreater, ...
+
+<signal.h>
+Функция signal в качестве второго аргумента может принять либо:
+  1) SIG_DFL для стандартной обработки сигнала.
+  2) SIG_IGN для игнорирования сигнала.
+  3) указатель на функцию обработки сигнала.
+
+Для отправки сигнала используется функция raise.
+
+<stdalign.h> содержит макросы для _Alignas и _Alignof.
+
+<stdatomic.h> определяет макросы и типы атомарных операций для разделяемых данных.
+Если определён __STDC_NO_ATOMICS__, поддержки атомиков не предусмотрено.
+
+Лок-фри макросы:
+ATOMIC_BOOL_LOCK_FREE
+ATOMIC_CHAR_LOCK_FREE
+ATOMIC_CHAR16_T_LOCK_FREE
+ATOMIC_CHAR32_T_LOCK_FREE
+ATOMIC_WCHAR_T_LOCK_FREE
+ATOMIC_SHORT_LOCK_FREE
+ATOMIC_INT_LOCK_FREE
+ATOMIC_LONG_LOCK_FREE
+ATOMIC_LLONG_LOCK_FREE
+ATOMIC_POINTER_LOCK_FREE
+
+Существуют перечисления memory_order и atomic_flag.
+
+memory_order_relaxed - никакая операция не блокирует память.
+memory_order_release
+            _acq_rel
+            _seq_cst - операция "store" выполняет операцию "release" в памяти.
+memory_order_acquire
+            _acq_rel
+            _seq_cst - операция "load" выполняет операцию "release" в памяти.
+memory_order_consume - выполняет операцию "consume" в памяти.
+
+Fence - примитивы синхронизации. Бывают acquire-fence и release-fence.
+
+void atomic_thread_fence(memory_order order);
+memory_order_relaxed - нет эффекта  
+memory_order_acquire
+            _consume - acquire-fence
+memory_order_release - release-fence
+memory_order_acq_rel - acquire-release-fence
+memory_order_seq_cst - seq-cst-fence
+
+Операции с атомиками:
+void atomic_store         (volatile A *object, C desired)
+void atomic_store_explicit(volatile A *objeсt, C desired, memory_order order)
+    order не следует быть memory_order_(acquire|consume|acq_rel).
+    Заменяет значение по указателю object значением desired.
+
+C atomic_load         (const volatile A *object)
+C atomic_load_explicit(const volatile A *objet, memory_order order)
+   order не следует быть memory_order_(release|acq_rel).
+    Возвращается значение по указателю object.
+  
+C atomic_exchange         (volatile A *object, C desired)
+C atomic_exchange_explicit(volatile A *object, C desired, memory_order order)
+    Заменить объект по указателю object на desired. Read-modify-write операция.
+    Возвращается значение по указателю object перед изменениями.
+
+_Bool atomic_compare_exchange_strong         (volatile A *object, C *expected, C desired)
+_Bool atomic_compare_exchange_strong_explicit(volatile A *object, C *expected, C desired,
+                                              memory_order success, memory_order failure)
+_Bool atomic_compare_exchange_weak         (volatile A *object, C *expected, C desired)
+_Bool atomic_compare_exchange_weak_explicit(volatile A *object, C *expected, C desired,
+                                            memory_order success, memory_order failure)
+    failure не следует быть memory_order_(release|acq_rel). Failure не должен быть строже,
+    чем success.
+    Сравнивает значение по указателю object со значением по указателю expected. Если они равны,
+    заменить значение object на значение desired, и работает с памятью по модели success.
+    Иначе устанавливает значение по указателю expected на значение object, и работает с памятью
+    по модели failure.
+
+atomic_compare_exchange_strong эквивалентно
+    if (memcmp(object, expected, sizeof (*object)) == 0) {
+        memcpy(object, &desired, sizeof (*object));
+    } else {
+    	memcpy(expected, object, sizeof (*object));
+    }
+
+Compare-exchange в цикле может быть более производителен на некоторых архитектурах.
+
+C atomic_fetch_(key)         (volatile A *object, M operand)
+C atomic_fetch_(key)_explicit(volatile A *object, M operand, memory_order order)
+  key = add
+      | sub
+      | or
+      | xor
+      | and
+
+  Производит выбранную операцию с object и перезаписывает его согласно order.
+  Возвращает object до выполненных изменений.
+
+atomic_flag - атомарный булевый тип, имеющий 2 состояния - set и clear.
+void atomic_flag_clear         (volatile atomic_flag *object)
+void atomic_flag_clear_explicit(volatile atomic_flag *object, memory_order order)
+  Устанавливает флаг на false.
+
+_Bool atomic_flag_test_and_set         (volatile atomic_flag *object)
+_Bool atomic_flag_test_and_set_explicit(volatile atomic_flag *object, memory_order order)
+  Устанавливает флаг на true и возвращает предыдущее состояние.
+
+<stdbool.h> содержит алиас для _Bool, true и false если __bool_true_false_are_defined == 1.
+
+<stddef.h> содержит алиасы для типов.
+  ptrdiff_t   - результат вычитания двух указателей.
+  size_t      - беззнаковый тип, результат работы sizeof.
+  max_align_t - наибольшее значение выравнивания типа.
+  wchar_t     - тип способный хранить наибольший по размеру символ из локали.
+  NULL        - implementation-defined нуллпоинтер-константа.
+  offsetof    - возвращает смещение члена структуры.
+
+<stdint.h> содержит определения для целых чисел, константы ширины и максимальных значений.
+
+intptr_t, uintptr_t могут содержать в себе указатель как целое число.
+intmax_t, uintmax_t могут содержать в себе максимальное значение целого типа с/без знака.
+
+<stdio.h> определяет функции и типы для ввода/вывода.
+FILE - тип, содержащий всю информацию о потоке, такую как индикатор смещения, указатель на
+ассоциируемый буфер (если такой есть), индикатор ошибки и EOF-индикатор.
+Также заголовок <wchar.h> определяет I/O функции для Unicode-символов.
+
+Текст в потоке организован в виде строк, каждая из которых содержит 0+ символов и символ новой
+строки '\n' в конце.
+
+int remove(const char *filename)
+  Удаляет файл. Если перед этим он не был закрыт - поведение implementation-defined.
+  Возвращает 0 в случае успеха, иначе ненулевое число.
+
+int rename(const char *old, const char *new)
+  Переименовывает файл из old в new. Old более не связан со своим ресурсом. Если пытаться
+  использовать в new существующий файл - поведение implementation-defined.
+
+FILE *tmpfile(void)
+  Создаёт временный бинарный файл с правами "wb+", который будет удалён при выходе или посылке
+  сигнала.
+
+char *tmpnam(char* s)
+  Создаёт случайное имя файла в каталоге /tmp.
+  
+int fclose(FILE *stream)
+  Успешный вызов fclose означает, что происходит flush (отправка всех оставшихся данных) и
+  файл закрыт.
+  Возвращает 0 в случае успеха, иначе EOF.
+
+int fflush(FILE *stream)
+  Незаписанные данные будут доотправлены в файл.
+  Возвращает 0 в случае успеха, иначе EOF.
+
+FILE *fopen(const char *restrict filename, const char *restrict mode)
+  Открывает файл.
+  mode представляет разрешения на открытие.
+  r    - для чтения.
+  w    - обрезать файл до нулевой длины и открыть для записи.
+  wx   - создать для записи.
+  a    - режим дозаписи. Запись в конец файла.
+  rb   - бинарный для чтения.
+  wb   - обрезать файл до нулевой длины и открыть как бинарный для записи.
+  wbx  - создать бинарный файл для записи.
+  ab   - режим дозаписи в бинарный файл. Запись в конец файла.
+  r+   - открыть для обновления (чтение и запись).
+  w+   - обрезать файл до нулевой длины и открыть для обновления (чтение и запись).
+  w+x  - создать для обновления.
+  a+   - режим дозаписи. Создать или открыть для обновления.
+  rb+  - открыть бинарный для обновления.
+  wb+  - обрезать файл до нулевой длины и открыть как бинарный для обновления.
+  wb+x - создать бинарный файл для обновления.
+  ab+  - режим дозаписи. Открыть или создать бинарный файл для обновления.
+
+FILE *freopen(const char *restrict filename, const char *restrict mode, FILE *restrict stream)
+  Открывает файл по пути filename и ассоциируемый с ним stream.
+  Возвращает null-pointer в случае провала.
+
+void setbuf(FILE *restrict stream, char *restrict buf)
+  Эквивалентно setvbuf, но без режима и размера.
+
+int setvbuf(FILE *restrict stream, char *restrict buf, int mode, size_t size)
+  Может быть использовано только если stream открыт.
+  mode определяет как происходит буфферизация.
+  _IOFBF - I/O полностью буфферизуется.
+  _IOLBF - I/O буфферизуется по строкам.
+  _IONBF - I/O не буфферизуется.
+  Возвращает 0 в случае успеха, иначе ненулевое значение.
+
+fprintf - выводит форматированную строку в файл.
+Если остались лишние аргументы, они игнорируются. Специальный символ начинается с '%'. Чтобы
+напечатать символ процента, нужно ввести "%%". После '%' может идти:
+  1) 0+ флагов, изменяющих значение буквенного спецификатора.
+  2) Поле минимальной длины. Если набор символов в аргументе меньше указанной длины - оставше-
+     еся место заполняется пробелами.
+  3) Символ точности (d, i, o, u, x, X). Число цифр после точки в числе (a, A, e, E, f, F).
+  4) Модификатор длины.
+  5) Модификатор преобразования.
+
+Список флагов:
+  "-" - значение выравнивается по левому краю.
+  "+" - всегда указывать знак числа (+ или -).
+  " " - помещать перед результатом пробел если первый символ - не знак.
+  "#" - добавить "0" для восьмеричных чисел и "0x" для шеснадцатеричных.
+  "0" - дополнять поле до ширины, указанной в поле.
+
+Спецификаторы длины:
+  NONE - int | unsigned int
+  "l"  - long int | unsigned long int
+  "hh" - int | unsigned int -> signed char | unsigned char
+  "h"  - int | unsigned int -> short int | unsigned short int
+  "ll" - long long int | unsigned long long int
+  "j"  - intmax_t | uintmax_t
+  "z"  - size_t | 8-byte type
+  "t"  - ptrdiff_t | unsigned 8-byte type
+  "L"  - __int64 | unsigned __int64
+
+Спецификаторы типа:
+  "d, i" - десятичное число, по умолчанию int.
+  "o"    - восьмеричное беззнаковое число, по умолчанию unsigned int.
+  "u"    - десятичное беззнаковое число, по умолчанию unsigned int.
+  "x, X" - шеснадцатеричное беззнаковое число, по умолчанию unsigned int.
+  "f, F" - числа с плавающей точкой, по умолчанию double и точность 6, NaN == [-]nan.
+  "e, E" - экспоненциальная запись чисел с плавающей точкой (вида 1.1e+44).
+  "g, G" - тоже самое, что %f,%F, но незначащие нули не выводятся.
+  "a, A" - число с плавающей точкой в виде шеснадцатеричного числа.
+  "c"    - число в виде ASCII-символа.
+  "s"    - строка, по умолчанию char *.
+  "p"    - указатель, implementation-defined.
+  "n"    - возвращает количество записанных до этого модификатора символов.
+
+printf эквивалентен fprintf с файловым дескриптором stdout (1).
+scanf эквивалентен fscanf с файловым дескриптором stdin (0).
+vfprintf эквивалентен fprintf, но принимающий va_arg.
+vfscanf эквивалентен fscanf, но принимающий va_arg.
+vprintf эквивалентен printf, но принимающий va_arg.
+
+Продолжить с fgets.

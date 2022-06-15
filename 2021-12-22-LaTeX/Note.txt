@@ -1,0 +1,97 @@
+LaTeX - ПО для создания документов, порождающее отформатированные документы в разных
+форматах (PDF, ...).
+
+Простейший пример:
+	\documentclass{article}
+	\title{Specification}
+	\author{I'm}
+	\date{December 2021}
+	\begin{document}
+		\maketitle
+	\end{document}
+
+Нумерованный список:
+	\begin{enumerate}
+		\item First
+		\item Second
+	\end{enumerate}
+
+Список в виде точек:
+	\begin{itemize}
+		\item First
+		\item Second
+	\end{itemize}
+
+Шрифты:
+	Medium        \textmd{Text}  \mdseries  - обычный
+	Bold          \textbf{Text}  \bfseries  - жирный
+	Upright       \textup{Text}  \upshape   - обычный резкий
+	Italic        \textit{Text}  \itshape   - курсив
+	Splanted      \textsl{Text}  \slshape   - курсив резкий
+	Small caps    \testsc{Text}  \scshape   - печатный стиль
+
+Ссылка к "формуле":
+	\documentclass{article}
+	\usepackage{amsmath} % Нужен для вывода ссылок к формулам в скобках
+	\begin{document}
+		\begin{equation}
+			\label{simple}
+			2 + 2 = 4
+		\end{equation}
+
+		From equation \eqref{simple} \dots.
+	\end{document}
+
+Секции:
+	\documentclass{article}  
+	\usepackage{amsmath} % Нужен для вывода ссылок к формулам в скобках
+	\begin{document}
+		\maketitle
+		\tableofcontents
+		\section{First}
+		\subsection{First subsection}
+			Text.
+		\section{Second}
+		\subsection{Second subsection}
+		Another text.
+	\end{document}
+
+Таблицы:
+	\begin{center}
+  		\begin{tabular}{ c c c }
+  			1 & 2 & 3 \\
+		\end{tabular}
+	\end{center}
+
+ Таблицы с разделителями:
+	\begin{center}
+		\begin{tabular}{ |c|c|c| }
+			\hline
+			1 & 2 & 3 \\
+			4 & 5 & 6 \\
+			\hline
+		\end{tabular}
+	\end{center}
+
+Таблицы с настройкой ширины колонки:
+	\documentclass{article}
+	\usepackage{tabularx}
+	\begin{document}
+		\begin{tabularx}{0.8\textwidth} { 
+			  | >{\raggedright\arraybackslash}X 
+			  | >{\centering\arraybackslash}X 
+			  | >{\raggedleft\arraybackslash}X | }
+			\hline
+			item 11 & item 12 & item 13 \\
+			\hline
+			item 21  & item 22  & item 23  \\
+			\hline
+		\end{tabularx}
+	\end{document}
+
+	0.8\textwidth означает 80% от всей ширины документа.
+ 	| >{\raggedright\arraybackslash}X | >{\centering\arraybackslash}X | >{\raggedleft\arraybackslash}X |
+	    первый,                           второй,                         третий столбец
+	устанавливает alignment каждого столбца
+
+https://www.overleaf.com/learn/latex/Tables

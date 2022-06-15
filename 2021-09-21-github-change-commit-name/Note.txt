@@ -1,0 +1,4 @@
+1) export EDITOR=редактор по желанию
+2) git commit --amend
+3) изменить первую строку
+4) git push -f

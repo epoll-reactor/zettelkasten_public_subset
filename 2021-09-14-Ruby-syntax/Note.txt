@@ -1,0 +1,300 @@
+В Ruby нет функции main, всё выполняется сверху вниз.
+Переменная экземпляра - @var
+Переменная класса - @@var
+Глобальная переменная - $var (всего лишь соглашение)
+Константа - Var
+Комментарий - #text
+  =begin
+    Многосторчный
+    комментарий.
+  =end
+
+Форматирование
+  "a = #{a}, b = #{b}"
+  "#{a} * #{b} = #{a * b}"
+
+Выполнить команду
+  `bash command`
+  %x[bash command]
+
+Массив строк
+  %w[a b c]
+  %w(a b c)
+  %w/a b c/
+
+Вызов метода у массива
+  %w/value1 value2 value3/.each do |value|
+    puts value
+  end
+
+Итерация через Hash
+  { "key1" => %w[value1 value2], "key2" => %w[value3 value4] }.each do |key, value|
+    puts "#{key}, #{value}"
+  end
+
+Множественное присваивание
+  first, second = "1 2 3 4".split(" ")
+  first = "1"
+  second = "2"
+
+Оператор выбора
+  case "string of chars".split(" ")[0]
+    when /s/
+      puts "1"
+    else
+      puts "2"
+  end
+
+Исключения 
+  begin
+    1/0
+  rescue ZeroDivisionError => err
+    puts "error #{err}"
+    # ...
+    retry
+  else
+    puts "error was not catched"
+  end
+
+  begin
+    1/0
+  rescue ZeroDivisionError => err
+    puts "error #{err}"
+  ensure
+    puts "Выполнится в любом случае"
+  end
+
+Краткая форма перехвата ошибок
+  1/0 rescue puts "Error"
+
+  def f
+    1/0
+  rescue
+    puts "Error"
+  end
+
+Семантика копирования
+  a = "123"
+  b = a
+  fail if a.object_id != b.object_id
+  a = "123"
+  b = a.gsub!("1")
+  fail if a.object_id == b.object_id
+
+Добавить константность
+  var = "123"
+  var.freeze
+
+Инициализация констант
+  Variable = "constant text"
+  Variable = 0xFFe  # <- warning, not error
+
+Переменные члены класса и члены метода
+  class Friend
+    @@my_name = "Daz"
+
+    def initialize(name, sex, phone)
+      @name, @sex, @phone = name, sex, phone
+    end
+
+    def hello
+      puts "Hello, i'm #{@name}"
+    end
+
+    def Friend.our_common_friend
+      puts "We're all friends of #{@@my_name}"
+    end
+  end
+
+"Оператор присваивания"
+  class Instance
+    @@my_var = 2
+
+    def get_my_var
+      @@my_var
+    end
+
+    def my_var=(value)
+      @@my_var = value
+    end
+  end
+
+  class Instance
+    @@my_var = 2
+
+    attr_accessor :my_var
+  end
+
+Алиасы
+  alias <new> <existing>
+
+  class Base
+    def consume
+      return
+    end
+
+    alias get consume
+  end
+
+Свёртка параметров в массив
+  def function(*args)
+    puts "#{args}"
+  end
+
+  function(1,2,3,4) => [1, 2, 3, 4]
+
+Подмешивание функций
+  class Base
+    def consume(*args)
+      puts "Ok #{args}"
+    end
+  end
+
+  base_object1 = Base.new
+  base_object2 = Base.new
+
+  def base_object2.mixin_method
+    self
+  end
+
+    base_object2.mixin_method.consume(1, 2, 3)
+  # base_object1.mixin_method
+
+Switch case
+  def switch(*args)
+    args.each do |arg|
+      case arg
+        when 1
+          puts "1"
+        when 2
+          puts "2"
+        end
+    end
+  end
+
+  switch(1, 2, 3, 4)
+
+Использование proc
+  def power(exponent)
+    proc { |base| base ** exponent }
+  end
+
+  puts power(10).call(2)
+
+Вывод нескольких индексов
+  puts "Text Lorem Ipsum"[0..2]
+
+Последние символы как в питоне
+  puts "Text Lorem Ipsum"[0..-2]
+  [ 0 # смещение 0 # длина ]
+
+Поиск по регулярному выражению
+  puts "Text Lorem Ipsum"[/(?<=\w)\s?Lorem/]
+
+Метод String#index
+  puts "First Pattern".index(?P) # 6
+
+Проверить есть ли подстрока
+  puts "Pattern".include? "att"
+
+Преобразование числа в символ при использовании <<
+  puts "123" << 33 # 123!
+
+Замена по регулярному выражению
+
+  payload = "I breathe when I sleep"
+  pattern = /I (\w+) when I (\w+)/
+  puts payload.sub(pattern,' I \2 when I \1')
+    Или
+  payload = "I breathe when I sleep"
+  pattern = /I (?<verb1>\w+) when I (?<verb2>\w+)/
+  puts payload.sub(pattern,' I \k<verb2> when I \k<verb1>')
+    Или
+  payload = "My hovercraft is full of eels"
+  pattern = /My (?<noun>\w+) is (?<predicate>.*)/
+  message = pattern.match(payload)
+  puts message[:noun]
+  puts message["predicate"]
+  puts message[:predicate]
+
+Локализация
+  require 'i18n'
+
+  I18n.config.available_locales = :ru, :fr, :en
+  I18n.load_path = Dir[File.expand_path("config/locales") + "/*.yml"]
+  I18n.locale = :fr
+  puts I18n.translate(:test)
+
+BigDecimal
+  require 'bigdecimal'
+
+  a = BigDecimal("1.23456", 10)
+  b = BigDecimal("2.45678", 10)
+  puts (a ** b).to_s.upcase
+
+Rational
+  a = Rational(1, 3)
+  b = Rational(1, 5)
+
+  puts (a + b).to_s.upcase
+
+Матрицы
+  require 'matrix'
+
+  m = Matrix[[1,2,3],
+             [4,5,6],
+             [7,8,9]]
+
+Диспатчинг аргументов
+  Перегрузок в Ruby нет.
+
+  class Base
+    def f(*options)
+      options.size == 0 ? "No" : "Yes"
+    end
+  end
+
+  puts Base.new.f
+  puts Base.new.f(1,2,3)
+
+Вычисление интеграла
+  def integrate(x0, x1, dx = (x1 - x0) / 1000.0)
+    x = x0
+    sum = 0
+    loop do
+      y = yield x
+      sum += dx * y
+      x += dx
+      break if x > x1
+    end
+
+    sum
+  end
+
+  def f(x)
+    x ** 2
+  end
+
+  puts integrate(0.0, 5.0) { |x| f(x) }
+
+  P.S yield - вызов кода из блока после функции с параметрами.
+  Здесь yield каждую итерацию вычисляет f(x).
+
+Проверить, имеет ли класс такой метод (LOL)
+
+  module TypeTraits
+    def has_method?(class_name, method)
+      class_name.to_s.respond_to? method.to_s
+    end
+  end
+
+  include TypeTraits
+
+  puts has_method?(String, "upcase!")
+
+Диапазоны Float
+
+  print (1.0 ... 2.0).include?(1.3324234234234348)
+  print (1.0 ... 2.0).to_a #< Error! succ отсутствует
+
+

@@ -1,0 +1,36 @@
+Из HTML можно отображать данные из бэкенда, например в Kotlin для этого служит FreeMarker.
+
+Имея шаблон
+    <h1>Hello, ${user.username}, ${user.password}!</h1>
+и класс
+    data class User(
+        val username: String,
+        val password: String
+    )
+, мы можем написать так:
+    val user = User(username, password)
+    call.respond(                         // Рендер шаблона
+        FreeMarkerContent(                // посредством этой библиотеки, где
+            "file.html",                  // это - шаблон,
+            mapOf("user" to user),        // это - отображение нашего класса в ссылки HTML (${user...}),
+            "name"                        // это - название поля (члена класса), необязательный параметр.
+        )
+    )
+.
+Например, простое диалоговое окно может выглядеть так:
+    data class Dialog(
+        val info: String
+    )
+    
+    suspend fun respondDialog(call: ApplicationCall, dialog: Dialog) {
+        call.respond(
+            FreeMarkerContent(
+                "src/main/resources/files/dialog.html",
+                mapOf("dialog" to dialog)
+            )
+        )
+    }
+
+    <body>
+        <h1>${dialog.info}</h1>
+    </body>

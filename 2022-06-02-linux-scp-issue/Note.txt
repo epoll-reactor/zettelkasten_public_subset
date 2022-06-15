@@ -1,0 +1,4 @@
+scp -P порт файл root@localhost:/home/root может не работать с QEMU
+(Failed to write или что-то такое).
+
+нужно в root@localhost: mount -o remount,rw / # read-only -> read/write.

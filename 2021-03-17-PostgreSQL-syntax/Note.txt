@@ -1,0 +1,544 @@
+	ENTER:
+	sudo su - postgres
+	psql new_database -U postgre_user
+
+CREATE DATABASE:
+	createdb -O postgre_user database_name
+	psql database_name -U postgre_user
+
+1) 		     city      | temp_lo | temp_hi | prcp |    date
+		---------------+---------+---------+------+------------
+ 		 San Francisco |      46 |      50 | 0.25 | 1994-11-27
+ 		 Moscow        |      20 |      30 |  0.5 | 2020-02-20
+
+	 SELECT city, (temp_hi+temp_lo)/2 AS temp_avg, date FROM weather;
+
+		     city      | temp_avg |    date
+		---------------+----------+------------
+		 San Francisco |       48 | 1994-11-27
+		 Moscow        |       25 | 2020-02-20
+
+2) ПОСЧИТАТЬ КОЛИЧЕСТВО ДУБЛИКАТОВ
+ 
+	SELECT city, COUNT (city) FROM weather GROUP BY city;
+
+
+2.1) ИЗМЕНИТЬ ЦЕЛОЧИСЛЕННЫЕ ЗНАЧЕНИЯ
+
+	UPDATE table SET field = field * 2;
+
+	UPDATE table SET field = field / 2 WHERE another_field = 'Field Name';
+
+
+3) UPDATE table SET field = 1234 WHERE field = 4321;
+
+
+4) DELETE FROM table WHERE model = 'name';
+
+
+5) 	TABLE aircrafts:
+
+	    Column     |     Type     | Collation | Nullable | Default
+	---------------+--------------+-----------+----------+---------
+	 aircraft_code | character(3) |           | not null |
+	 model         | text         |           | not null |
+	 range         | integer      |           | not null |
+
+	TABLE seats:
+	     Column      |         Type          | Collation | Nullable | Default
+	-----------------+-----------------------+-----------+----------+---------
+	 aircraft_code   | character(3)          |           | not null |
+	 seat_no         | character varying(4)  |           | not null |
+	 fare_conditions | character varying(10) |           | not null |
+
+	INSERT INTO seats VALUES ('123', '1A', 'Business');
+
+		ОШИБКА:  INSERT или UPDATE в таблице "seats" нарушает ограничение внешнего ключа "seats_aircraft_code_fkey"
+		DETAIL:  Ключ (aircraft_code)=(123) отсутствует в таблице "aircrafts".
+
+	INSERT INTO seats VALUES ('772', '1A', 'Business');
+
+
+6) 	COUNT OF ELEMENTS:
+
+		SELECT count (*) FROM seats WHERE aircraft_code = 'SU9';
+
+			count
+			-----
+			    7
+
+  
+7) ПОСЧИТАТЬ КОЛИЧЕСТВО ЭЛЕМЕНТОВ ПО НАЗВАНИЮ ПОЛЯ:
+
+	SELECT aircraft_code, count (*) FROM seats GROUP BY aircraft_code;
+
+	 	aircraft_code | count
+	   ---------------+-------
+		772           |     1
+ 		SU9           |     7
+
+
+8) ТОЖЕ САМОЕ, НО С СОРТИРОВКОЙ:
+
+	SELECT aircraft_code, count (*) FROM seats GROUP BY aircraft_code ORDER BY count;
+
+		 aircraft_code | count
+		---------------+-------
+		 772           |     1
+		 SU9           |     7
+
+
+8) ПОСЧИТАТЬ КОЛИЧЕСТВО МЕСТ С КЛАССОМ ОБСЛУЖИВАНИЯ
+
+	SELECT aircraft_code, fare_conditions, count (*)
+		FROM seats
+			GROUP BY aircraft_code, fare_conditions
+			ORDER BY aircraft_code, fare_conditions;
+
+		 aircraft_code | fare_conditions | count
+		---------------+-----------------+-------
+		 772           | Business        |     1
+		 SU9           | Business        |     7
+
+
+8) ПОСЧИТАТЬ КОЛИЧЕСТВО МЕСТ С КЛАССОМ ОБСЛУЖИВАНИЯ В ПОРЯДКЕ УБЫВАНИЯ
+
+	SELECT aircraft_code, fare_conditions, count (*)
+		FROM seats
+			GROUP BY aircraft_code,      fare_conditions
+			ORDER BY aircraft_code DESC, fare_conditions DESC;
+
+		 aircraft_code | fare_conditions | count
+		---------------+-----------------+-------
+		 SU9           | Business        |     7
+		 772           | Business        |     1
+		
+		
+9) 	varchar = character varying -> подстраивается под длину текста
+	char = character -> тупо забивает всё пробелами до конца диапазона
+	text -> строка произвольной длины
+
+
+11)	Чтобы не экранировать символы ('') -> ('), можно воспользоваться
+	такой записью:
+
+		$$Text'n, 123$$;
+
+	Или же строки в стиле C:
+
+		E'Text\'n, 123';
+
+
+11) Рекомендуемый формат даты:
+
+		'YYYY-MM-DD'
+
+	Но можно писать так:
+
+		'20200101' -> 2020-01-01
+	
+	Или так:
+
+		'Sep 12, 2020' -> 2020-09-12
+
+	Текущая дата:
+
+		SELECT current_date;
+
+	Перевести дату в строку:
+
+		SELECT to_char(current_date, 'dd-mm-yyyy');
+
+
+
+12) Cross join:
+
+	Все возможные комбинации двух таблиц.
+
+	t1 INNER JOIN t2 ON condition
+	==
+	t1 CROSS JOIN t2 WHERE condition
+
+
+13) Left join:
+
+	Left join можно записать как:
+
+	SELECT * FROM t1 CROSS JOIN t2
+		WHERE t1.id = t2.id
+
+	UNION ALL
+
+	SELECT t1.id, null
+		FROM t1
+		WHERE NOT EXISTS(
+			SELECT FROM t2 WHERE t2.id = t1.id
+		)
+
+
+14) Разница в датах:
+
+	SELECT ('2020-02-07'::timestamp - '2018-09-03'::timestamp)::interval;
+
+		 interval
+		----------
+		 522 days
+
+ 	SELECT (current_timestamp - '2018-09-03'::timestamp)::interval;
+			
+		        interval
+		-------------------------
+		 922 days 17:13:51.75947
+
+
+ 15) Получить отдельное значение из даты:
+
+ 	SELECT extract('mon' FROM current_timestamp);
+
+		 date_part
+		-----------
+		         3
+
+
+15) Функция для подсчёта разницы во времени:
+
+	CREATE OR REPLACE FUNCTION datediff (type VARCHAR, date_from DATE, date_to DATE)
+	  RETURNS INTEGER LANGUAGE plpgsql
+	AS $$
+	  DECLARE age INTERVAL;
+	  BEGIN
+	    CASE type
+	      WHEN 'year' THEN
+	        RETURN date_part('year', date_to) - date_part('year', date_from);
+	      WHEN 'month' THEN
+	        age := age(date_to, date_from);
+	        RETURN date_part('year', age) * 12 + date_part('month', age);
+	      ELSE
+	        RETURN (date_to - date_from)::int;
+	    END CASE;
+	  END;
+	$$;
+
+
+16) Создание таблицы с массивом:
+
+	CREATE TABLE pilots (
+		name 		text,
+		schedule 	integer[]
+	);
+
+	INSERT INTO pilots
+		VALUES ('worker1', '{1,2,3}'::integer[]),
+		       ('worker2', '{2,4,6,7}'::integer[]);
+
+
+17) Добавить элемент в массив:
+
+	UPDATE pilots SET schedule = schehule || 7 WHERE
+		pilot_name = 'Abraham';
+
+	UPDATE pilots SET schedule[0] = i1
+		WHERE pilot_name = 'Abraham';
+
+	UPDATE pilots SET schedule[0:3] = ARRAY[0,0,0,0]
+		WHERE pilot_name = 'Abraham';
+
+
+18) Выборка по массиву:
+
+	SELECT * FROM pilots
+		WHERE array_position(schehule, 1) IS NOT NULL;
+
+
+19) Выборка заданных элементов:
+
+	SELECT * FROM pilots
+		WHERE schedule @> '{1, 7}'::integer[];
+
+	@> - В левом массиве содержатся все элементы
+		правого массива.
+
+	schedule "СОДЕРЖИТ ВСЕ ЭЛЕМЕНТЫ" '{1, 7}'::integer[];
+
+
+20) Операция AND с массивом:
+
+	SELECT * FROM pilots
+		WHERE schedule && ARRAY[2, 3];
+
+	Выберет те строки, в чьих массивах есть
+		2 или 3.
+
+
+21) Развернуть массив в виде столбца:
+
+	SELECT unnest(schedule) AS day_of_week
+		FROM pilots WHERE pilot_name = 'worker1';
+
+
+22) Хранение JSON в таблице:
+
+	Есть два типа - json и jsonb;
+	json быстрее вставляет элементы, но
+	парсит их при каждом обращении,
+	а jsonb парсит один раз, замедляя вставку,
+	но потом обращение обходится дёшево.
+
+
+23) Вставка JSON-объектов:
+
+	CREATE TABLE pilot_hobbies(
+		name		text,
+		hobbies		jsonb
+	);
+
+	INSERT INTO pilot_hobbies VALUES(
+		'Ivan', '{"Sports":["Football"]}'::jsonb
+	);
+		INSERT INTO pilot_hobbies VALUES(
+		'Peter', '{"Sports":["Football"],"home_lib":true}'::jsonb
+	);
+
+24) Выбор по содержанию в JSON:
+
+	SELECT * FROM pilot_hobbies WHERE hobbies
+		@> '{"Sports":["Football"]}'::jsonb;
+
+	Ищет строки, содержащие в себе массив с
+	элементом "Football".
+
+	АЛЬТЕРНАТИВНЫЙ ВАРИАНТ:
+
+	SELECT name, hobbies -> 'Sports' AS sports
+		FROM pilot_hobbies
+		WHERE hobbies -> 'Sports' @> '["Football"]'::jsonb;
+
+
+	Операция '->' служит для обращения к конкретному
+	ключу JSON.
+
+
+24) Подсчёт полей по наличию ключа JSON:
+
+	SELECT count(*) FROM pilot_hobbies
+		WHERE hobbies ? 'sport';
+
+	Выбрать те строки, где содержится JSON ключ 'sport';
+
+	Так как результат этого выражения Boolean,
+	можно сделать так:
+
+	SELECT count (*) FROM pilot_hobbies
+		WHERE hobbies ? 'sport' OR hobbies ? 'trips';
+
+
+25) Обновить данные в выбранном JSON-объекте:
+
+	UPDATE pilot_hobbies
+		SET hobbies = hobbies || '{ "Sports":["Cybersport"] }'
+		WHERE name = 'Slave1';
+
+
+26) Добавить значение в массив по JSON-ключу:
+
+	UPDATE pilot_hobbies
+		SET hobbies = jsonb_set(hobbies, '{Sports, 1}', '"Football"')
+		WHERE name = 'Slave2';
+	
+	Второй параметр jsonb_set - путь в пределах JSON-объекта,
+	очерёдность с начала, нумерация начинается с 0.
+
+
+27) Неправильное сравнение маленьких чисел:
+
+	SELECT '5e-324'::double precision > '4e-324'::double precision;
+
+
+28) Очистить таблицу:
+
+	TRUNCATE TABLE table_name;
+
+
+29) Автоматическая нумерация строк:
+
+	CREATE TABLE numeric_table(
+		id		serial,
+		name	text
+	);
+
+	INSERT INTO numeric_table (name) VALUES ('A');
+	INSERT INTO numeric_table (name) VALUES ('B');
+	INSERT INTO numeric_table (name) VALUES ('C');
+
+		 id | name
+		----+------
+		  1 | A
+		  2 | B
+		  3 | C
+
+
+30) Перестановка записей при подаче "левого" индекса:
+
+		 id | name
+		----+------
+		  1 | T1
+		  2 | T1
+		  3 | T1
+		  4 | T1
+
+	  INSERT INTO test_serial VALUES (10, 'T1');
+	  INSERT INTO test_serial (name) VALUES ('T1');
+
+		 id  | name
+		-----+------
+		  1  | T1
+		  2  | T1
+		  3  | T1
+		  4  | T1
+		 10  | T1
+		  5  | T1
+	  
+
+31) Удалить дубликаты:
+
+	DELETE FROM pilot_hobbies AS lhs
+		WHERE EXISTS (SELECT * FROM pilot_hobbies AS rhs
+			WHERE rhs.ctid > lhs.ctid AND rhs.* IS NOT DISTINCT FROM lhs.*);
+
+
+32) Прибавить интервал:
+
+	SELECT ('2016-02-25'::date + '1 mon'::interval) AS new_date;
+
+
+33) Обрезать дробную часть даты:
+
+	SELECT (date_trunc ('sec', timestamp '1999-11-17 12:34:56.975'));
+	SELECT (date_trunc ('minute', timestamp '1999-11-17 12:34:56.975'));
+	SELECT (date_trunc ('hour', timestamp '1999-11-17 12:34:56.975'));
+	SELECT (date_trunc ('day', timestamp '1999-11-17 12:34:56.975'));
+	SELECT (date_trunc ('month', timestamp '1999-11-17 12:34:56.975'));
+	SELECT (date_trunc ('week', timestamp '1999-11-17 12:34:56.975'));
+	...
+
+
+34) Выбрать век:
+
+	SELECT extract(
+		'cent' FROM timestamp '1999-12-27 12:34:32.12345');
+
+
+35) Переименовать столбец:
+
+	ALTER TABLE pilot_hobbies
+		RENAME COLUMN name TO json_name;
+
+
+36) Сохранить результат JOIN в новую таблицу:
+
+	CREATE TABLE new_table AS (
+		SELECT * FROM pilot_hobbies
+		INNER JOIN pilots ON pilot_hobbies.name != pilots.pilot_name));
+
+
+37) Выборка из таблицы по месяцу:
+
+	INSERT INTO birthdays VALUES ('K', '1955-03-23');
+	INSERT INTO birthdays VALUES ('BC', '1971-03-19');
+	INSERT INTO birthdays VALUES ('K', '1955-03-23');
+
+		 person |   bdate
+		--------+------------
+		 K      | 1955-03-23
+		 BC     | 1971-03-19
+		 AB     | 1987-08-12
+
+	SELECT * FROM birthdays WHERE extract ('mon' FROM bdate) = 3;
+
+
+38) Выборка по возрасту:
+
+	SELECT *, bdate + '40 years'::interval
+		FROM birthdays WHERE bdate + '40 years'::interval < current_timestamp;
+
+
+39) Удалить столбец:
+
+	ALTER TABLE table_name DROP COLUMN name;
+
+
+40) Добавить столбец:
+
+	ALTER TABLE table_name ADD COLUMN phone VARCHAR;
+
+
+41) Заполнить все столбцы одинаковым значением:
+
+	UPDATE table_name SET field = 'Text';
+
+
+42) Скопировать колонку из одной таблицы в другую:
+
+	UPDATE table_name
+		SET new_field = old_table.field FROM old_table;
+
+
+43) Обращение к двумерному массиву:
+
+	SELECT * FROM table_name WHERE array[1][1] <> 'Value';
+
+
+44) Добавить JSON-ключ в существующее значение:
+
+	UPDATE pilot_hobbies SET hobbies_json = jsonb_set(
+		hobbies_json, '{trips}', '10')
+		WHERE name = 'Ivan';
+
+
+45) Выборка отдельного поля JSON:
+
+	SELECT name, hobbies_json -> 'trips' AS trips FROM pilot_hobbies;
+
+	'trips' - JSON-ключ.
+
+
+46) Конкатенация JSON:
+
+	SELECT '{"sport": "h", "car": "m"}'::jsonb || '{"car":"m"}'::jsonb;
+
+
+47) Удалить JSON-ключ:
+
+	SELECT '{"sport": "h", "car": "m"}'::jsonb - 'sport';
+
+
+48) При вставке JSON порядок ключей не сохраняется.
+
+
+49) Выбор по присутствию элемента массива:
+    SELECT * FROM pilot_hobbies
+    WHERE hobbies @> '{ "sports": [ "football" ] }'::jsonb;
+
+    или
+
+    SELECT pilot_name, hobbies->'sports' AS sports FROM pilot_hobbies
+    WHERE hobbies->'sports' @> '[ "football" ]'::jsonb;
+    
+	Только здесь выводятся только спортивные предпочтения в JSON.
+
+50) Проверить есть ли JSON-объекты с заданным ключом:
+
+    SELECT count(*) FROM pilot_hobbies WHERE hobbies ? 'sports';
+
+51) Заменить массив
+
+	UPDATE pilot_hobbies SET hobbies = hobbies || '{ "sports": [ "hokkey" ] }'
+	WHERE pilot_name = 'Pavel';
+
+52) Добавить элемент в массив
+
+	UPDATE pilot_hobbies
+	SET hobbies = jsonb_set(hobbies, '{ sports, 1 }', '"football"') WHERE pilot_name = 'Pavel';
+
+	sports - имя ключа с массивом
+	1      - индекс вставки. Нумерация с нуля

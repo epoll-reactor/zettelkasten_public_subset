@@ -1,0 +1,5 @@
+// Добавить пустую колонку.
+ALTER TABLE cvs ADD COLUMN "owner_id" VARCHAR(50);
+
+// Добавить колонку owner_id, ссылающуюся на username у таблицы users.
+ALTER TABLE cvs ADD CONSTRAINT owner_id FOREIGN KEY (owner_id) REFERENCES users(username);

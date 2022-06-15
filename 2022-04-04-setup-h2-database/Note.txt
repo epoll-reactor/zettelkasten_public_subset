@@ -1,0 +1,2 @@
+yay -S h2
+nohup sh h2-console

@@ -1,0 +1,3 @@
+git checkout <sha of merge>
+git commit --amend # edit message
+git rebase HEAD previous_branch

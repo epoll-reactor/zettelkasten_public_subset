@@ -1,0 +1,21 @@
+fmt - форматирование текста.
+
+echo -e "Hello\neveryone,\nhave\na\nnice\nday" > text.txt
+
+Вывод слов в одной строке: fmt text.txt
+  Hello everyone, have a nice day
+  
+Вывод не превыщающий максимальную ширину на линии, разделяемый по словам: fmt -w 10 text.txt
+  Hello
+  everyone.
+  Have a
+  nice day.
+
+Вывод с табуляцией: fmt -w 10 -t text.txt
+  Hello
+     everyone.
+     Have a
+     nice
+     and
+     prosperous
+     day.

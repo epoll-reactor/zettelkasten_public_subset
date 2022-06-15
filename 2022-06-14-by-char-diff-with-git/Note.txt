@@ -1,0 +1,4 @@
+git init
+git add file1; git commit -m 1
+git add file1; git commit -m 2
+git diff —word-diff=color —word-diff-regex=. master^ master

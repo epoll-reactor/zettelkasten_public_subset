@@ -1,0 +1,42 @@
+Способы "грепать" файл:
+  cat /proc/cpuinfo | egrep '(thread|core)s?'
+  egrep '(thread|core)s?' /proc/cpuinfo
+  </proc/cpuinfo egrep '(thread|core)s?'
+
+Считать отобранные строки:
+  egrep '(thread|core)s?' /proc/cpuinfo | wc -l
+  egrep -c '(thread|core)s?' /proc/cpuinfo
+
+Искать отдельное слово, не вхождения:
+  grep -w 'seven' test.txt
+
+Искать по началу, концу слова:
+  grep '\<seven' test.txt
+  grep 'seven\>' test.txt
+  grep '\<seven\>' == grep -w 'seven'
+
+Начало или конец строки:
+  grep '^seven$' test.txt
+
+Показать окрестности искомой строки:
+  grep -C 1 'seven' test.txt # Сверху и снизу
+  grep -A 1 'seven' test.txt # Снизу
+  grep -B 1 'seven' test.txt # Сверху
+
+Убрать строку с матчем:
+  grep -v 'seven' test.txt
+
+Показать только найденные строки:
+  grep -o | --only-matching
+
+Подсветить матч:
+  grep --colour "[[:upper:]]" test.txt 
+
+Несколько матчей в строке:
+  grep -E "(six|seven|eight).*\1" test.txt
+
+Рекурсивный поиск по директории:
+  grep -r --include="*.[hc]pp" "match" dir/files 
+          --exclude=
+  Или же
+  git grep "size_t" в репозитории

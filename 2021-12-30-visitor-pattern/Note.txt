@@ -1,0 +1,30 @@
+Посетитель - поведенческий паттерн, позволяющий добавлять новые операции над объектами, не изменяя
+их классы непосредственно.
+
+Посетитель предлагает размещать новую функциональность отдельно от рассматриваемых классов. У класса,
+который реализует "посещение" объектов, может быть множество методов для разных типов, например:
+  class ExportVisitor implements Visitor as
+    method VisitCity(City c) {}
+    method VisitIndustry(Industry i) {}
+
+Как подавать объекты в класс-посетитель? Полиморфизм для этого не подходит, поскольку у всех методов
+разная сигнатура. Можно сделать так:
+  foreach (Node n in Graph)
+
+    if (Node instanceof City)
+      Visitor.VisitCity((City) Node)
+      
+    if (Node instanceof Industry)
+      Visitor.VisitIndustry((Industry) Node)
+
+Другое решение этой проблемы - добавить метод, который вызывает "посещение" у Visitor самим рассмат-
+риваемым классам.
+
+  class City
+    method Accept(Visitor V)
+      V.VisitCity(this)
+
+  class Industry
+    method Accept(Visitor V)
+      V.VisitIndustry(this)
+
