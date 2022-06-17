@@ -1,0 +1,2 @@
+for (auto &&[first, second] : map)
+  // Нет никакого std::move, имеется биндинг lvalue-ссылки.
