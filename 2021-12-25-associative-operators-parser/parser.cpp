@@ -8,7 +8,7 @@ int main() {
   };
   struct Number : Node {
     int Value;
-
+    
     Number(int V) : Value(V) {}
 
     void Print() override { std::cout << Value; }
@@ -29,7 +29,7 @@ int main() {
     }
   };
 
-  [[maybe_unused]] struct Parser {
+  struct Parser {
     std::string_view Input;
     unsigned PeekIndex;
 
@@ -37,11 +37,9 @@ int main() {
 
     std::unique_ptr<Node> Additive() {
       auto Expression = Multiplicative();
-
       while (true) {
         if (MatchOperator('+')) {
-          Expression = std::make_unique<Binary>('+', std::move(Expression),
-                                                Multiplicative());
+          Expression = std::make_unique<Binary>('+', std::move(Expression), Multiplicative());
           continue;
         }
         break;
@@ -51,11 +49,9 @@ int main() {
 
     std::unique_ptr<Node> Multiplicative() {
       auto Expression = Term();
-
       while (true) {
         if (MatchOperator('*')) {
-          Expression = std::make_unique<Binary>('*', std::move(Expression),
-                                                Multiplicative());
+          Expression = std::make_unique<Binary>('*', std::move(Expression), Multiplicative());
           continue;
         }
         break;
@@ -65,19 +61,16 @@ int main() {
 
     std::unique_ptr<Node> Term() {
       char Token = Peek();
-      if (!isdigit(Token)) {
-        throw std::runtime_error("Number expected, got: " +
-                                 std::string(1, Token));
-      }
+      if (!isdigit(Token))
+        throw std::runtime_error("Number expected, got: " + std::string{Token});
       return std::make_unique<Number>(Token - '0');
     }
 
     char Peek() { return Input.at(PeekIndex++); }
 
     bool MatchOperator(char Op) {
-      if (PeekIndex >= Input.length()) {
+      if (PeekIndex >= Input.length())
         return false;
-      }
       if (Input.at(PeekIndex) == Op) {
         ++PeekIndex;
         return true;
