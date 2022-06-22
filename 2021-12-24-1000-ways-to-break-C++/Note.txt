@@ -1,0 +1,9 @@
+1) const char* array[] = {
+     #include "data.txt"
+   };
+
+2) gcc -fmax-include-depth=1 -Xpreprocessor -dM -e main.c
+
+3) #undef __GNUC__
+
+4) #undef __STDC__
