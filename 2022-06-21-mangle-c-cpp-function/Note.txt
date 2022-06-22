@@ -1,0 +1,1 @@
+echo "struct object { void method(int); }; void object::method(int) {}" | g++ -x c++ -S - -o- | grep "^_.*:$" | sed -e 's/:$//'
