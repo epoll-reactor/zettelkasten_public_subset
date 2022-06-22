@@ -1,0 +1,10 @@
+Отключить вывод команды (не вывода):
+	echo "OK"  # Выводит
+	@echo "OK" # Не выводит
+
+Проверка ошибок компиляции:
+	if ! $(CC) main.c 2> /dev/null; then \
+		echo "Catched compile error"; \
+	else \
+		echo "Expected compile error"; \
+	fi

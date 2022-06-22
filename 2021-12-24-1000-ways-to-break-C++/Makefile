@@ -10,7 +10,7 @@ limit_include_depth:
 
 undef___STDC__:
 	@echo -n "Built target undef___GNUC__... "
-	@if ! g++ undef___STDC__.cpp 2>/dev/null; then \
+	@if ! g++ undef___STDC__.cpp 2> /dev/null; then \
 		echo "catched error"; \
 	else \
 		echo "expected error"; \
