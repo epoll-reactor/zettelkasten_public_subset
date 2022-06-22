@@ -12,7 +12,7 @@ for filename in `ls $search_dir`; do
 	# 1 цифра: права пользователя
 	# 2 цифра: права группы
 	# 3 цифра: права other (всех остальных)
-	permissions=`stat -c "%a %n" $search_dir/$filename | cut -d " " -f1`
+	permissions=`stat -c "%a" $search_dir/$filename`
 	# Нам нужна первая цифра, и она должна быть >= 4, т.к.
 	# права в линуксе формируются так:
 	#
@@ -21,6 +21,8 @@ for filename in `ls $search_dir`; do
 	# x (execute) = 1
 	#
 	# Значит, нам нужно число больше 4 (типа 4+0+0, 4+0+1 и т.д)
+	#
+	# Берём первое из трёх чисел
 	read_field=`echo ${permissions:0:1}`
 	if [[ $read_field -ge 4 ]]; then
 		bytes=`du -b $search_dir/$filename | cut -f -1`
