@@ -10,15 +10,25 @@ struct object {
 int main() {
 #if 1
 	[[maybe_unused]] object memory;
+
 	asm(
-	"lea    -1(%%rbp), %%rax\n"
-	"mov    $0,       %%esi\n"
-	"mov    %%rax,    %%rdi\n"
-	: //                       output
-	: //                       input
-	: //                       clobbered registers
+	"lea    %[pMemory], %%rax\n"
+	"mov    $0,         %%esi\n"
+	"mov    %%rax,      %%rdi\n"
+	"call   _ZN6object6methodEi"
+	: //                        output
+	: [pMemory] "m" (memory) // input
+	: //                        clobbered registers
 	);
-	asm("call _ZN6object6methodEi");
+
+	// asm(
+	// "lea    -1(%%rbp), %%rax\n"
+	// "mov    $0,       %%esi\n"
+	// "mov    %%rax,    %%rdi\n"
+	// : //                       output
+	// : //                       input
+	// : //                       clobbered registers
+	// );
 #else
 	object memory;
 	memory.method(0);
