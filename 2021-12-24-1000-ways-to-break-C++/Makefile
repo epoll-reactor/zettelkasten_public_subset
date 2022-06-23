@@ -1,4 +1,4 @@
-all: include_any_text limit_include_depth undef___STDC__
+all: include_any_text limit_include_depth undef___STDC__ stdlib_headers_inside_namespace
 
 include_any_text:
 	@echo "Built target include_any_text..."
@@ -15,8 +15,11 @@ undef___STDC__:
 	else \
 		echo "expected error"; \
 	fi
-		
-	
+
+stdlib_headers_inside_namespace:
+	@echo -n "Built target stdlib_headers_inside_namespace..."
+	@g++ stdlib_headers_inside_namespace.cpp -o stdlib_headers_inside_namespace.out
+
 clean:
 	rm -rf *.o
 	rm -rf *.out
