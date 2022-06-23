@@ -1,6 +1,6 @@
-extern "C" int printf(const char *fmt, ...);
+int printf(const char *fmt, ...);
 
-extern "C" void _1(int argument) {
+void _1(int argument) {
 	printf("Argument: %d\n", argument);
 }
 
