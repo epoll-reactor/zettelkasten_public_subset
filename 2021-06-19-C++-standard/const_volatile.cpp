@@ -3,7 +3,7 @@ int main() {
                  int  _1          = {0};
   const          int  _1_c        = {0};
         volatile int  _1_v        = {0};
-//               int &_0_ref_1    = _1; ERROR
+                 int &_0_ref_1    = _1;
 //               int &_0_ref_2    = _1_c; ERROR
 //               int &_0_ref_3    = _1_v; ERROR
                  int &_1_ref      =  const_cast<               int &>(_1_c);
