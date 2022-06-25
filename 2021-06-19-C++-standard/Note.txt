@@ -315,7 +315,15 @@ operator delete может принимать nullptr и должен корре
 Тривиально копируемые типы могут быть безопасно помещены в массив char,
 unsigned char или std::byte, а также скопированы с помощью memcpy.
 
-cv void может выступать в операторе ?: (2 и 3 операнды), в операторах
-typeid, noexcept и decltype, и как выражение в return.
+cv void может выступать в операторе ?: (2 и 3 операнды), в операторах typeid,
+noexcept и decltype, и как выражение в return.
 
-6.7.2 Compound types
+CV-модификаторы
+  const T -- неизменяемый объект типа T;
+  volatile T -- изменяемый объект T или const volatile T;
+  const volatile T -- неизменяемый объект, полученный из volatile T, или
+    изменяемый объект, полученный из const T.
+
+Пример в файле const_volatile.cpp.
+
+6.7.4 Integer conversion rank
