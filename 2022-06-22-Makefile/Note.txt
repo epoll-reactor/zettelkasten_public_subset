@@ -8,3 +8,13 @@
 	else \
 		echo "Expected compile error"; \
 	fi
+
+.PHONY-таргеты:
+	Нужны затем, чтобы не создавать целевой таргет (позволяет
+	внедрить какие-то оптимизации и избежать конфликт имён с реальными
+	целями).
+
+	Пример
+	make_something:
+		@command...
+	.PHONY : make_something

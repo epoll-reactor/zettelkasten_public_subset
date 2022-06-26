@@ -1,0 +1,21 @@
+В Makefile, сгенерированном CMake:
+
+make edit_cache
+	Интерактивное меню для редактирования параметров CMake
+	
+	                                 Page 1 of 2
+	BUILD_SHARED_LIBS                ON
+	CMAKE_BUILD_TYPE                 Release
+	CMAKE_INSTALL_PREFIX             /usr/local
+	CPP_VK_LIB_BENCHMARKING          OFF
+	CPP_VK_LIB_SANITIZE              OFF
+	CPP_VK_LIB_STATIC_BUILD          OFF
+	SIMDJSON_BUILTIN_IMPLEMENTATIO   
+	SIMDJSON_DEVELOPMENT_CHECKS      OFF
+	SIMDJSON_DISABLE_DEPRECATED_AP   OFF
+	SIMDJSON_ENABLE_THREADS          ON
+	SIMDJSON_EXCEPTIONS              ON
+	SIMDJSON_EXCLUDE_IMPLEMENTATIO   
+	SIMDJSON_IMPLEMENTATION          
+	SIMDJSON_LIB_SOVERSION           9
+	SIMDJSON_LIB_VERSION             9.0.0
