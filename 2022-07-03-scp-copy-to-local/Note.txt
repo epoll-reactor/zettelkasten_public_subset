@@ -1,0 +1,1 @@
+scp -r host@name:/path /local/path

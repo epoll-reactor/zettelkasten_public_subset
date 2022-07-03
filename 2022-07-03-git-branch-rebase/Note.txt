@@ -1,0 +1,5 @@
+git remote -v # посмотреть список ремоутов
+git remote add upstream https://репозиторий, для которого хотим делать rebase
+git fetch upstream
+git merge upstream/master
+git push
