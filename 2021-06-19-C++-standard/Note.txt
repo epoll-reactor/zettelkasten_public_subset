@@ -326,4 +326,4 @@ CV-модификаторы
 
 Пример в файле const_volatile.cpp.
 
-6.7.4 Integer conversion rank
+6.8 Program execution
