@@ -1,0 +1,4 @@
+dpkg --get-selections # Получить список установленных пакетов
+В /etc/apt/sources.list # Снять комментарии с deb-src
+apt-get update # Получить зеркала с исходниками
+apt-get source file # Скачать исходники file
