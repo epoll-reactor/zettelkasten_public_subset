@@ -1,0 +1,12 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+[diff]
+	external = /usr/bin/kdiff3
+	renames = false
+
+[include]
+	path = ../git_config_to_be_included

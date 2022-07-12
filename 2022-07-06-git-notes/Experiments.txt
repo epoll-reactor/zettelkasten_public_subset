@@ -1,0 +1,111 @@
+В __tmp_git_repo ЗАМЕНИТЬ git НА .git.
+
+После git init имеем каталог .git
+
+.git
+├── branches
+├── config
+├── description
+├── HEAD
+├── hooks
+│   ├── applypatch-msg.sample
+│   ├── commit-msg.sample
+│   ├── fsmonitor-watchman.sample
+│   ├── post-update.sample
+│   ├── pre-applypatch.sample
+│   ├── pre-commit.sample
+│   ├── pre-merge-commit.sample
+│   ├── prepare-commit-msg.sample
+│   ├── pre-push.sample
+│   ├── pre-rebase.sample
+│   ├── pre-receive.sample
+│   ├── push-to-checkout.sample
+│   └── update.sample
+├── info
+│   └── exclude
+├── objects
+│   ├── info
+│   └── pack
+└── refs
+    ├── heads
+    └── tags
+
+===========================================
+
+$ .git/config
+# '#' и ';' - комментарии.
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+
+# Указание сторонней diff-утилиты. Открывается при
+# git diff.
+[diff]
+	external = /usr/bin/kdiff3
+	# Вы?ключить отслеживание изменений имён файлов
+	renames = false
+
+Получение поля конфига, например:
+	git config --get diff.external
+	или
+	git config diff.external
+
+Замена значения в конфиге:
+	git config --replace-all diff.renames false
+	                         ^            ^
+	                         Поле         Новое значение
+
+Добавить/удалить значение:
+	git config --add diff.testField true
+	git config --unset diff.testField
+
+Подключение стороннего файла:
+[include]
+	path = ../git_config_to_be_included # Такой же формат полей
+	
+===========================================
+
+$ .git/COMMIT_EDITMSG
+
+Файл, где временно хранится имя текущего коммита.
+
+===========================================
+
+$ .git/description
+
+Описание проекта, используется в GitWeb.
+
+===========================================
+
+$ .git/gitk.cache
+
+Кэш gitk в непонятном для меня формате.
+
+===========================================
+
+$ .git/head
+
+Ссылка на HEAD. может быть как и ref: refs/heads/master,
+так и detached head.
+
+===========================================
+
+$ .git/index
+
+Тут хранятся какие-то бинарные данные вперемешку с именами файлов.
+
+
+...
+
+Показать содержимое блоба (бинарного файла):
+	$ ls .git/objects/0c
+	fbf08886fca9a91cb753ec8734c84fcbe52c9f
+	$ git cat-file -p [0c][fbf08886fca9a91cb753ec8734c84fcbe52c9f]
+	                  ^   ^
+	                  |   Название объекта
+	                  Имя директории
+
+(Что такое объекты? Какая организация файлов и директороий в
+.git/objects?)

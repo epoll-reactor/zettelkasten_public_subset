@@ -1,0 +1,574 @@
+Git позволяет выполнять большинство действий локально, без
+доступа к интернету.
+
+Git сохраняет данные в базе не по именам файлов, а по хешу
+их содержимого.
+
+Файлы могут находиться в трёх состояниях:
+  committed (зафиксированные) - данные сохранены в локальной базе;
+  modified - изменения внесены в файл, но пока не зафиксированы в
+    базе данных;
+  staged (индексированные) - модифицированная версия файла помечена
+    для последующей фиксации.
+
+  +---------------+ +------------------------+ +------+
+  | Рабочая папка | | Область индексирования | | .git |
+  +---------------+ +------------------------+ +------+
+          |                       |               |
+          |<--( Контрольное считывание проекта )--|
+          |                       |               |
+          |--( Запись индекси- )->|               |
+             ( рованных состо  )  |-( Фиксация )->|
+             ( яний            )  |
+
+Директория .git - место, где Git хранит метаданные и объектную
+базу данных проекта. Эта директория копируется при клонировании
+проекта из другого хранилища.
+
+Рабочая папка - место, куда выгружается одна из версий проекта.
+Эти файлы извлекаются из сжатой базы в папке .git.
+
+Область индексирования - файл в .git, хранящий информацию о том,
+что именно войдёт в следующую операцию фиксации. Иногда это называют
+промежуточной областью.
+
+Базовый рабочий процесс:
+  1) Редактирование файла в рабочей папке;
+  2) индексирование файла, добавление их снимков в область индексиро-
+     вания;
+  3) Фиксация, сохранение снимков в папке .git.
+
+Конфигурационные файлы Git бывают трёх типов (уровней):
+  1) /etc/gitconfig - уровень системы; все пользователи могут
+     этим пользоваться;
+  2) ~/.gitconfig или ~/.config/git/config - уровень конкретного
+      пользователя;
+  3) .git/config в конкретном репозитории.
+Настройки каждого следующего уровня переопределяют настройки предыдущего.
+Например, ~/.gitconfig переопределяет /etc/gitconfig.
+
+git config --system записывает изменения в /etc/gitconfig. По умолчанию
+этого каталога может не существовать.
+
+Первым делом, нужно установить имя и почту:
+git config --(global|system) user.name ""
+git config --(global|system) user.email ""
+
+Установка редактора, используемого при редактировании сообщений:
+git config --system core.editor micro
+
+Просмотр значений в конфиге:
+git config --list
+git config --list --(global|system)
+
+Просмотр конкретного поля в конфиге:
+git config --system user.email
+
+3 способа получения помощи о команде:
+git help <cmd>
+git <cmd> --help
+man git-<cmd>
+
+Команда git init создаёт папку .git/ со всеми нужными файлами для
+инициализации локального репозитория.
+
+git clone по умолчанию скачивает все версии всех файлов за всю историю
+проекта. Это значит, что при потере доступа к серверу, репозиторий может
+быть восстановлен по локальной копии.
+
+git clone https://github.com/libgit2/libgit2 создаёт папку с именем
+libgit2 и инициализирует в ней папку .git, и выгружает последнюю рабочую
+копию репозитория.
+
+Клонировать можно в указанное место:
+git clone link folder/project
+
+Клонирование может осуществляться с помощью разных протоколов: git, https
+или git.
+
+Файлы могут быть отслеживаемыми или неотслеживаемыми. Отслеживаемые файлы
+индексируются в Git и имеют историю изменений. О неиндексированных же Git
+"не знает", так как они не были добавлены в него.
+
+Основным инструментом определения состояния файлов является
+$ git status
+On branch master
+nothing to commit, working directory clean
+что означает, что в рабочей папке отсутствуют отслеживаемые и изменённые
+файлы. Предположим, что мы создали файл README.
+$ echo 'Info' > README
+$ git status
+On branch master
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+  README
+
+nothing added to commit but untracked files present (use "git add" to
+                                                     track)
+
+Untracked значит, что Git видит файл, отсутствующий в предыдущем снимке
+состояния (коммите).
+
+Теперь, чтобы начать отслеживать файл, введём
+$ git add README
+$ git status
+On branch master
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+    new file: README
+
+Если команде git add передана директория, все содержащиеся в ней файлы
+добавляются рекурсивно.
+
+Если отредактировать ранее отслеживаемый файл benchmarks.rb, имеем
+$ git status
+On branch master
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+    new file: README
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working
+                                                         directory)
+
+    modified: benchmarks.rb
+
+Файл benchmarks.rb появляется под заголовком Changed but not stageed for
+commit. Это значит, что отслеживаемый файл был изменён, но пока не
+проиндексирован. Индексирование выполняется командой уже знакомой
+командой git add (её можно воспринимать как "добавить содержимое к
+следующему коммиту").
+
+Затем ещё раз запустим
+$ git status
+On branch master
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+    new file: README
+    modified: benchmarks.rb
+
+Теперь оба файла индексированы и войдут в следующий коммит.
+
+$ vim benchmarks.rb
+$ git status
+On branch master
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+    new file: README
+    modified: benchmarks.rb
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working
+                                                         directory)
+
+    modified: benchmarks.rb
+
+Теперь утверждается, что benchmarks.rb одновременно является
+индексированным и неиндексированным. Дело в том, что Git хранит файл
+в двух версиях: оригинальной (неизменённой), и изменённой. Если же
+выполнить
+$ git add benchmarks.rb
+$ git status
+On branch master
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+    new file: README
+    modified: benchmarks.rb
+
+Git status даёт довольно многословный ответ. Вместо него можно ввести
+$ git status -s
+или
+$ git status --short
+
+Неотслеживаемые файлы - ??
+Добавленные файлы - A
+Модифицированные - M
+
+Gitignore позволяет избежать добавления и показа в списке отслеживаемых
+определённых форматов файлов.
+$cat .gitignore
+# Комментарий.
+*.[oa]    # Файлы, заканчивающиеся на ".o" или ".a" 
+*~        # Файлы, заканчивающиеся на "~"
+!lib.a    # Отслеживать файл lib.a, несмотря на пропуск файлов *.a
+/TODO     # Файл TODO в корне, но не folder/TODO
+doc/*.txt # doc/arch.txt, но не doc/server/arch.txt
+
+Паттерны напоминают упрощённые регулярные выражения.
+Можно заканчивать паттерн слешем (/), указывая папку.
+Можно инвертировать паттерн, начав его с !.
+Вложенные папки: a/**/z (например, a/b/c/d/z).
+
+Примеры gitignore: https://github.com/github/gitignore.
+
+$ git diff
+Показывает неиндексированные изменения, пока не вошедшие в
+коммит.
+
+$ git diff --staged
+Делает то же, что и diff без параметров, но показывет уже индексированные
+файлы.
+
+$ git commit
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Changes to be committed:
+# new file: README
+# modified: benchmarks.rb
+
+Производит фиксацию, и открывает текстовый редактор. Git commit в
+комментариях показывает практически точную копию git status.
+
+Коммит с флагом -v добавляет дополнительную информацию.
+$ git commit -v
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch master
+# Your branch is ahead of 'origin/master' by 2 commits.
+#   (use "git push" to publish your local commits)
+#
+# Changes to be committed:
+#	modified:   file.txt
+#
+# Changes not staged for commit:
+#	modified:   ../Note.txt
+#
+# ------------------------ >8 ------------------------
+# Do not modify or remove the line above.
+# Everything below it will be ignored.
+diff --git a/repo/file.txt b/repo/file.txt
+index a2c4ee4..05fdc4c 100644
+--- a/repo/file.txt
++++ b/repo/file.txt
+@@ -1,22 +1 @@
++ a
+- b
+
+$ git commit -a -m 'Update.'
+Commit с флагом -a автоматически проиндексирует все индексируемые файлы,
+но оставит неиндексируемые. Перед вводом этой команды не нужен git add.
+
+$ git rm file
+С этих пор Git перестаёт работать с файлом, удаляя его из числа
+отслеживаемых и попутно с диска. Обычное удаление переводит файл в
+состояние Changed but not updated.
+
+$ rm grit.gemspec
+$ git status
+On branch master
+Changes to be committed:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working
+                                                             directory)
+    deleted: grit.gemspec
+
+  no changed added to commit
+
+$ git rm grit.gemspec
+rm 'grit.gemspec'
+$ git status
+On branch master
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+    deleted: grit.gemspec
+
+$ git rm --cached file
+Удаляет файл из зоны индексирования, но не с диска.
+
+$ git rm log/\*.log
+Следует обратить внимание на \. Эта команда удалит все файлы с
+расширением .log из папки log.
+
+$ git rm \*~
+Удаляет все файлы, заканчивающиеся на ~.
+
+$ git mv file_from file_to
+$ git status
+On branch master
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+  renamed: file_from -> file_to
+
+, что эквивалентно командам
+$ mv file_from file_to
+$ git rm file_from
+$ git add file_to
+
+Логи
+$ git clone https://github.com/schacon/simplegit-progit
+$ git log
+Author: Scott Chacon <schacon@gmail.com>
+Date:   Mon Mar 17 21:52:11 2008 -0700
+
+    changed the verison number
+
+commit 085bb3bcb608e1e8451d4b2432f8ecbe6306e7e7
+Author: Scott Chacon <schacon@gmail.com>
+Date:   Sat Mar 15 16:40:33 2008 -0700
+
+    removed unnecessary test code
+
+commit a11bef06a3f659402fe7563abf99ad00de2209e6
+Author: Scott Chacon <schacon@gmail.com>
+Date:   Sat Mar 15 10:31:28 2008 -0700
+
+    first commit
+
+Git log имеет множество параметров.
+Параметр -p показывает разницу, внесённую с каждым коммитом, а
+-2 ограничивает вывод последними двумя коммитами.
+
+$ git log -p -2
+Author: Scott Chacon <schacon@gmail.com>
+Date:   Mon Mar 17 21:52:11 2008 -0700
+
+    changed the verison number
+
+diff --git a/Rakefile b/Rakefile
+index a874b73..8f94139 100644
+--- a/Rakefile
++++ b/Rakefile
+@@ -5,7 +5,7 @@ require 'rake/gempackagetask'
+ spec = Gem::Specification.new do |s|
+     s.platform  =   Gem::Platform::RUBY
+     s.name      =   "simplegit"
+-    s.version   =   "0.1.0"
++    s.version   =   "0.1.1"
+     s.author    =   "Scott Chacon"
+     s.email     =   "schacon@gmail.com"
+     s.summary   =   "A simple gem for using Git in Ruby code."
+...
+
+$ git log
+commit ca82a6dff817ec66f44342007202690a93763949 (HEAD -> master, origin/master, origin/HEAD)
+Author: Scott Chacon <schacon@gmail.com>
+Date:   Mon Mar 17 21:52:11 2008 -0700
+
+    changed the verison number
+
+ Rakefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 085bb3bcb608e1e8451d4b2432f8ecbe6306e7e7
+Author: Scott Chacon <schacon@gmail.com>
+Date:   Sat Mar 15 16:40:33 2008 -0700
+
+    removed unnecessary test code
+
+ lib/simplegit.rb | 5 -----
+ 1 file changed, 5 deletions(-)
+
+commit a11bef06a3f659402fe7563abf99ad00de2209e6
+Author: Scott Chacon <schacon@gmail.com>
+Date:   Sat Mar 15 10:31:28 2008 -0700
+
+    first commit
+
+ README           |  6 ++++++
+ Rakefile         | 23 +++++++++++++++++++++++
+ lib/simplegit.rb | 25 +++++++++++++++++++++++++
+ 3 files changed, 54 insertions(+)
+
+Git log с флагом stat показывает более краткие сведения
+о коммитах.
+
+$ git log --stat -1
+commit ca82a6dff817ec66f44342007202690a93763949 (HEAD -> master, origin/master, origin/HEAD)
+Author: Scott Chacon <schacon@gmail.com>
+Date:   Mon Mar 17 21:52:11 2008 -0700
+
+    changed the verison number
+
+ Rakefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Наиболее интересен флаг format у git log.
+$ git log --format="%h - %an, %ar : %s"
+ca82a6d - Scott Chacon, 14 years ago : changed the verison number
+085bb3b - Scott Chacon, 14 years ago : removed unnecessary test code
+a11bef0 - Scott Chacon, 14 years ago : first commit
+
++------+------------------------------------------------------+
+| %H   | Хеш коммита                                          |
+| %h   | Сокращённый хеш коммита                              |
+| %T   | Хеш дерева                                           |
+| %t   | Сокращённый хеш дерева                               |
+| %P   | Хеш родительских коммитов                            |
+| %p   | Сокращённый хеш родительских коммитов                |
+| %an  | Имя автора                                           |
+| %ae  | Почта автора                                         |
+| %ad  | Дата создания оригинала (формат учитывает -date=opt) |
+| %ar  | Дата создания оригинала в относительной форме        |
+| %cn  | Имя создателя версии                                 |
+| %ce  | Почта создателя версии                               |
+| %cd  | Дата создания версии                                 |
+| %cr  | Дата создания версии в относительной форме           |
+| %s   | Комментарий                                          |
++------+------------------------------------------------------+
+
+Автор - тот, кто создал файл, а создатель версии - тот, кто внёс
+изменения.
+
+Git log также поддерживает флаг --graph.
+Пример из моего проекта:
+
+$ git log --format="%h - %an, %ar : %s" --graph
+*   c21a641 - epoll-reactor, 9 weeks ago : Merge pull request #13 from epoll-reactor/dev
+|\  
+| * eb52176 - epoll-reactor, 9 weeks ago : Update README.
+| * af26fcb - epoll-reactor, 9 weeks ago : Update HTML documentation.
+| * ca5df3f - epoll-reactor, 9 weeks ago : Some Doxygen view fixes.
+| * 517fc89 - epoll-reactor, 9 weeks ago : Describe CFG builder.
+| * 3bace31 - epoll-reactor, 9 weeks ago : Add brief SSA form description.
+| * ff89cb9 - epoll-reactor, 10 weeks ago : Create HTML documentation.
+| * a5246af - epoll-reactor, 10 weeks ago : Describe CFG.
+|/  
+*   66a51ac - epoll-reactor, 10 weeks ago : Merge pull request #12 from epoll-reactor/dev
+
+Git log с поиском строк в сообщении:
+
+$ git log --grep "remove"
+commit feee05bc76f437d9e1787d8b4bc427e70a0bdf72
+Author: epoll-reactor <>
+Date:   Tue Jan 18 22:25:32 2022 +0100
+
+    remove unneeded enum item
+
+Краткие однострочные логи:
+$ git log --pretty=oneline
+ced86dfc1696550957d8e8a31bbbbdc39b543f88 Show SSA index in phi node dumps.
+66dcb25906520ee87f45b7c4360e2261c81701a6 Memory model without smart pointers; while, do-while CFG.
+3853d7a0fa013b765c3adde0482bfc56783568da Simplify SSA a bit.
+188ee374e40d747d03e7cf2d9dfc63e488aba1e5 Apply missing clang-format.
+53727a88a1f3ed18624b13b6a0a9f892504873b2 Resolve few naming issues.
+964390ba96c8d1f22d72b72e40887d3ef87527b3 Rename SSA builder class.
+1da9d1f9d88ac88847345992015297cb43025e4a Move CFG-to-dot to compiler library.
+c283a03689760ad36b1d5e3f94ce60b2256de537 Add license marks.
+6f84fbe49fe523ae7a5093be66795b14c036cf15 Implement SSA form and part of CFG with if statement.
+4b0a549a73b2bd2ac14df859d142d2232410e6b0 Remove whole middle-end.
+3d3f0003510e38c96e781ddf2ab62268bc2a2a44 Hot fix of wrong for-increment AST production.
+
+Редактирование существующего коммита:
+
+$ git commit -m 'message'
+$ git add file
+$ git commit --amend
+
+Возврат файла в неизменённое состояние (из зоны индексирования):
+$ git checkout|restore -- file
+
+Удалённые репозитории:
+$ git remote
+bakkdoor       https://github.com/bakkdoor/grit (fetch)
+bakkdoor       https://github.com/bakkdoor/grit (push)
+cho45          https://github.com/cho45/grit (fetch)
+cho45          https://github.com/cho45/grit (push)
+defunkt        https://github.com/defunkt/grit (fetch)
+defunkt        https://github.com/defunkt/grit (push)
+origin         git@github.com:mojobmo/grit.git (fetch)
+origin         git@github.com:mojobmo/grit.git (push)
+
+Мы можем легко внести себе изменения, сделанные любым, чьи
+репозитории мы добавили с помощью remote add.
+
+$ git remote add pb https://github.com/paulboone/ticgit
+
+Здесь pb -- сокращённое имя ремоута. Теперь, это имя можно
+вводить вместо полной ссылки на репозиторий.
+
+$ git fetch pb
+remote: Counting objects: 43, done.
+remote: Compressing objects: 100% (36/36), done.
+remote: Total 43 (delta 10), reused 31 (delta 5)
+Unpacking objects: 100% (43/43), done.
+From https://github.com/paulboone/ticgit
+* [ new branch ]         master     -> pb/master
+* [ new branch ]         ticgit     -> pb/ticgit
+
+Ветка master коллеги доступна в pb/master.
+
+Git fetch просто копирует данные из удалённого репозитория,
+не выполняя слияние. Его при необходимости нужно выполнять
+вручную.
+
+Переименовывание:
+$ git remote rename pb paul
+$ git remote
+origin
+paul
+
+Удаление:
+$ git remote rm paul
+$ git remote
+origin
+
+
+Список тегов:
+$ git tag
+v0.0.1
+v0.1.0
+v0.1.1
+v0.1.2
+v0.2.0
+v0.2.1
+v0.3.0
+
+Список тегов по фильтру:
+$ git tag -l 'v0.4*'
+v0.4.0
+v0.4.1
+v0.4.2
+v0.4.3
+v0.4.4
+v0.4.5
+v0.4.6
+v0.4.7
+
+Добавление тега:
+$ git tag -a v1.4 -m "My version 1.4"
+$ git show v1.4
+Tagger:   Ben Straub <ben@straub.cc>
+Date:     Sat May 3 20:19:12 2014 -0700
+
+My version 1.4
+
+commmit 712b166a48791182235d59b19b6b8db34c9002c9
+Author: Scott Chacon <schacon@gee-mail.com>
+Date: Mon Mar 15 21:52:11 2008 -0700
+
+  Changed the version number
+
+Добавление тега конкретному коммиту:
+$ git tag -a v1.2 712b166
+
+Обмен тегами:
+$ git push origin v1.2
+
+Обмен сразу всеми тегами:
+$ git push origin --tags
+
+Алиасы:
+$ git config --global alias.co checkout
+$ git config --global alias.br branch
+$ git config --global alias.ci commit
+$ git config --global alias.unstage 'reset HEAD --'
+$ git config --global alias.last 'log -1 HEAD'
+$ git config --global alias.visual "!gitk" # Внешняя команда начинается с !
+
+$ git unstage file
+==
+$ git reset HEAD -- file
+
+Продолжить с "3. Ветвления".

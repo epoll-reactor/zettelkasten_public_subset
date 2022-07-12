@@ -1,0 +1,33 @@
+clang++ -Xclang -analyze -Xclang -analyzer-checker=debug.DumpCFG -fsyntax-only test.cpp
+
+int main() {
+	for (int i = 0; i < 10; ++i) {}
+}
+
+int main()
+ [B4 (ENTRY)]
+   Succs (1): B3
+
+ [B1]
+   1: i
+   2: ++[B1.1]
+   Preds (1): B2
+   Succs (1): B2
+
+ [B2]
+   1: i
+   2: [B2.1] (ImplicitCastExpr, LValueToRValue, int)
+   3: 10
+   4: [B2.2] < [B2.3]
+   T: for (...; [B2.4]; ...)
+   Preds (2): B1 B3
+   Succs (2): B1 B0
+
+ [B3]
+   1: 0
+   2: int i = 0;
+   Preds (1): B4
+   Succs (1): B2
+
+ [B0 (EXIT)]
+   Preds (1): B2

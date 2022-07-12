@@ -1,0 +1,3 @@
+$HOME/.config/neofetch/config.conf
+
+ascii_distro="..."

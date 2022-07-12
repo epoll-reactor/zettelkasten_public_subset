@@ -1,0 +1,61 @@
+llvm::Value представляет регистр SSA (Static single assignment), или же "SSA value".
+
+llvm::LLVMContext хранит много внутренних данных (пока неизвестно каких).
+llvm::IRBuilder<> вспомогательный класс для создания инструкций.
+llvm::Module -- хранилище функций и глобальных переменных. LLVM хранит здесь код.
+std::map<std::string, llvm::Value *> -- простое хранилище значений переменных.
+
+llvm::IRBuilder<> позволяет опционально указывать имена инструкций, например:
+  Builder->CreateFAdd(L, R, "addtmp").
+Прелесть этого класса в том, что он сам заботится о том, куда вставить инструкцию,
+какой индекс SSA ей установить.
+
+Builder должен получать также операнды строго одного типа.
+
+Создание функций
+  // Массив типов принимаемых аргументов функции.
+  llvm::SmallVector<llvm::Type *> ArgTypes;
+  ArgTypes.push_back(llvm::Type::getInt32Ty(*Ctx));
+  ArgTypes.push_back(llvm::Type::getFloatTy(*Ctx));
+
+  llvm::FunctionType *Signature = llvm::FunctionType::get(
+    llvm::Type::getInt32Ty(*TheContext), // Возвращаемое значение.
+    ArgTypes, // Аргументы.
+    false // Вариативные аргументы (Такие как в С: void f(char *, ...))?
+  );
+
+  // Здесь всё понятно.
+  llvm::Function *Func = llvm::Function::Create(
+    Signature,
+    llvm::Function::ExternalLinkage,
+    "FunctionName",
+    &*TheModule
+  );
+
+  for (llvm::Argument &Arg : Func->args())
+    Arg.setName("Имена функций из узла AST");
+
+  
+  llvm::BasicBlock *CFGBlock = llvm::BasicBlock::Create(
+    *TheContext,
+    "entry", // Название блока.
+    Func // Функция, которой принадлежит блок.
+  );
+  // При вызовах Builder->Insert|Create*, инструкции будут вставляться
+  // в указанный блок.
+  Builder->SetInsertPoint(CFGBlock);
+
+  // Обработка тела функции, предпочтительно используя примерно такой
+  // код:
+  // Decl->GetBody()->Accept(this); // Паттерн "посетитель".
+
+  // LastEmitted - последняя созданная инструкция; обычно используется
+  // вместо возвращаемого значения, если используется шаблон "посетитель".
+  Builder->CreateRet(LastEmitted);
+  // Какая-то проверка, можно нагуглить.
+  llvm::verifyFunction(*Func);
+  LastEmitted = Func;
+  // Костыль.
+  IsReturnValue = false;
+  // Ещё один костыль.
+  LastEmitted->print(llvm::errs());

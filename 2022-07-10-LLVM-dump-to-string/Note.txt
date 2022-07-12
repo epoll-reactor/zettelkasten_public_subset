@@ -1,0 +1,3 @@
+std::string str;
+llvm::raw_string_ostream rso(str);
+I->print(rso);

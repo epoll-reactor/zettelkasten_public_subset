@@ -1,0 +1,29 @@
+Если
+  find_package(LLVM REQUIRED CONFIG)
+  
+  message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
+  message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
+  
+  include_directories(${LLVM_INCLUDE_DIRS})
+  add_definitions(${LLVM_DEFINITIONS})
+  
+  llvm_map_components_to_libnames(llvm_libs support core irreader)
+
+даёт ошибку
+
+  CMake Error at /usr/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:44 (message):
+    check_source_compiles: C: needs to be enabled before use.
+  Call Stack (most recent call first):
+    /usr/share/cmake/Modules/CheckCSourceCompiles.cmake:76 (cmake_check_source_compiles)
+    /usr/lib64/cmake/llvm/FindFFI.cmake:44 (check_c_source_compiles)
+    /usr/lib64/cmake/llvm/LLVMConfig.cmake:233 (find_package)
+    compiler/CMakeLists.txt:6 (find_package)
+
+, то в проекте не включен язык C:
+
+  project(
+      Project
+      DESCRIPTION ""
+      HOMEPAGE_URL ""
+      LANGUAGES #[[C]] CXX
+  )

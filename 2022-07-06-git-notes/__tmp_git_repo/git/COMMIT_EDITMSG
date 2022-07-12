@@ -1,0 +1,12 @@
+Commit 4.
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Wed Jul 6 19:30:25 2022 +0200
+#
+# On branch master
+# Changes to be committed:
+#	new file:   file.txt
+#	new file:   git_config_to_be_included
+#
