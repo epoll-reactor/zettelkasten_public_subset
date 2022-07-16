@@ -1,0 +1,67 @@
+Код:
+int main(int count) {
+	int result = 0;
+	for (int i = count; i < 10; ++i) {
+		result = result - 1;
+	}
+	return result;
+}
+
+LLVM такой:
+define i32 @main(i32 %count) {
+entry:
+  %result = alloca i32, align 4
+  store i32 0, i32* %result, align 4
+  %i = alloca i32, align 4
+  store i32 %count, i32* %i, align 4
+  br label %for.cond
+
+for.cond:                                         ; preds = %for.body, %entry
+  %i1 = load i32, i32* %i, align 4
+  %0 = icmp slt i32 %i1, 10
+  br i1 %0, label %for.body, label %for.end
+
+for.body:                                         ; preds = %for.cond
+  %result2 = load i32, i32* %result, align 4
+  %result3 = load i32, i32* %result, align 4
+  %1 = sub i32 %result3, 1
+  store i32 %1, i32* %result, align 4
+  %i4 = load i32, i32* %i, align 4
+  %2 = add i32 %i4, 1
+  br label %for.cond
+
+for.end:                                          ; preds = %for.cond
+  %result5 = load i32, i32* %result, align 4
+  ret i32 %result5
+}
+
+LLVM должен быть таким:
+define i32 @main(i32 %count) {
+entry:
+  %result = alloca i32, align 4
+  store i32 0, i32* %result, align 4
+  %i = alloca i32, align 4
+  store i32 %count, i32* %i, align 4
+  br label %for.cond
+
+for.cond:                                         ; preds = %for.body, %entry
+  %i1 = load i32, i32* %i, align 4
+  %0 = icmp slt i32 %i1, 10
+  br i1 %0, label %for.body, label %for.end
+
+for.body:                                         ; preds = %for.cond
+  %result3 = load i32, i32* %result, align 4
+  %1 = add i32 %result3, 1
+  store i32 %1, i32* %result, align 4
+  %i4 = load i32, i32* %i, align 4
+  %i5 = add i32 %i4, 1
+  store i32 %i5, i32* %i, align 4
+  br label %for.cond
+
+for.end:                                          ; preds = %for.cond
+  %result5 = load i32, i32* %result, align 4
+  ret i32 %result5
+}
+
+Вместо обычных операций (сложение и т.д.), нужно делать
+сначала load, операция, store.
