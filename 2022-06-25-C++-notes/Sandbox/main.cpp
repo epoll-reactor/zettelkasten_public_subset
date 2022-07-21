@@ -9,7 +9,7 @@
 //int main() {
 //  using namespace boost::asio;
 //  io_context ctx;
-//  std::ifstream in("/home/machen/resources.txt");
+//  std::ifstream in("/home/krot/resources.txt");
 //  std::string host_, file_;
 //  while (in >> host_ >> file_) {
 //    spawn(ctx, [&ctx, host = std::move(host_), file = std::move(file_)](yield_context yield) -> void {
@@ -507,7 +507,7 @@
 
 //int main(int argc, char *argv[]) {
 //  struct stat s;
-//  int fd = open("/home/machen/TextData/text_files/bluetooth.txt", O_RDONLY);
+//  int fd = open("/home/krot/TextData/text_files/bluetooth.txt", O_RDONLY);
 //  int status = fstat(fd, &s);
 //  size_t size = s.st_size;
 

@@ -26,18 +26,18 @@ static void inverse_fast_fourier_transform(std::valarray<std::complex<double>>& 
 }
 
 void create_graph(const std::string& filename, const std::valarray<std::complex<double>>& data) {
-  std::ofstream out_file("/home/machen/" + filename + ".txt");
+  std::ofstream out_file("/home/krot/" + filename + ".txt");
   for (size_t i = 0; i < data.size(); ++i) {
     out_file << data[i].real() << ' ' << i << std::endl;
   }
   std::string command;
-  command += "pushd /home/machen &&";
+  command += "pushd /home/krot &&";
   command += "gnuplot -e \"filename='" + filename + ".txt';name='" + filename + ".pdf';\" ";
   command += "git/cpp_vk_lib/benchmark/benchmark.gnuplot &&";
   command += "popd &&";
   command += "rm -rf " + filename + ".txt";
   system(command.c_str());
-//  system(R"(pushd /home/machen &&
+//  system(R"(pushd /home/krot &&
 //            gnuplot -e "filename='output.txt';name='output.pdf';" git/cpp_vk_lib/benchmark/benchmark.gnuplot &&
 //            popd &&
 //            rm -rf output.txt)");

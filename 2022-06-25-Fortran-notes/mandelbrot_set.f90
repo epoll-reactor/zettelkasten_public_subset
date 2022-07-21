@@ -66,7 +66,7 @@ subroutine compute_mandelbrot(image_size, gamma, intensity, scaling, background_
   call random_number(b)
   b_integer = floor(b * 4)
 
-  open(1, file = '/home/machen/mandelbrot_set.png', status = 'new')
+  open(1, file = '/home/krot/mandelbrot_set.png', status = 'new')
 
   write(1, 'P6 (A5) (A5)\n') 1, 1
   

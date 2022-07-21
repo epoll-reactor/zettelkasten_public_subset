@@ -242,9 +242,9 @@ void log_pitsa()
 
 void single_log()
 {
-//  log_writer("/home/machen/pizzalog.txt", log_flag::warn | log_flag::unixtime | log_flag::nostdout) << "000000";
+//  log_writer("/home/krot/pizzalog.txt", log_flag::warn | log_flag::unixtime | log_flag::nostdout) << "000000";
   log_writer(log_flag::warn | log_flag::unixtime /*| log_flag::no_sync_with_stdio*/) << "pitsaaaaaa";
-//  log_writer("/home/machen/pizzalog.txt", log_flag::warn | log_flag::unixtime) << "pitsaaaaaa";
+//  log_writer("/home/krot/pizzalog.txt", log_flag::warn | log_flag::unixtime) << "pitsaaaaaa";
 }
 
 void thread_log()

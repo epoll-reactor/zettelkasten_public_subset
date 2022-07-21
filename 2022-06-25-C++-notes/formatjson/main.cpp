@@ -8,7 +8,7 @@ int main(int argc, char* argv[]) {
     }
     Json_formatter formatter(argv[1]);
 //  Json_formatter formatter("example.json");
-//  Json_formatter formatter("/home/machen/wiki.json");
-//  Json_formatter formatter("/home/machen/vk.json");
+//  Json_formatter formatter("/home/krot/wiki.json");
+//  Json_formatter formatter("/home/krot/vk.json");
   std::cout << formatter.format() << std::endl;
 }

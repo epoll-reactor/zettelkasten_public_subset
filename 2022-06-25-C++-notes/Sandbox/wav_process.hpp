@@ -18,7 +18,7 @@ struct valarray_cast {
 };
 
 void wav_process_tests() {
-  std::string filename = "/home/machen/record.wav";
+  std::string filename = "/home/krot/record.wav";
   AudioFile<double> audio_file;
   bool loaded_ok = audio_file.load(filename);
   assert(loaded_ok);
@@ -47,5 +47,5 @@ void wav_process_tests() {
       channel[j] = fft_data[j].real();
     }
   }
-  audio_file.save("/home/machen/processed-record.wav");
+  audio_file.save("/home/krot/processed-record.wav");
 }

@@ -37,7 +37,7 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = Lorence1.0.0
-DISTDIR = /home/machen/code/C++/Lorence/.tmp/Lorence1.0.0
+DISTDIR = /home/krot/code/C++/Lorence/.tmp/Lorence1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-O1 -pipe -O2 -std=gnu++11 -flto=8 -fno-fat-lto-objects -fuse-linker-plugin -fPIC
 LIBS          = $(SUBLIBS) /usr/lib/libQt5Widgets.so /usr/lib/libQt5Gui.so /usr/lib/libQt5Core.so -lGL -lpthread   
@@ -816,7 +816,7 @@ compiler_moc_header_clean:
 moc_organizer.cpp: organizer.hpp \
 		moc_predefs.h \
 		/usr/bin/moc
-	/usr/bin/moc $(DEFINES) --include /home/machen/code/C++/Lorence/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/machen/code/C++/Lorence -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/12.1.0 -I/usr/include/c++/12.1.0/x86_64-pc-linux-gnu -I/usr/include/c++/12.1.0/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/12.1.0/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/12.1.0/include-fixed -I/usr/include organizer.hpp -o moc_organizer.cpp
+	/usr/bin/moc $(DEFINES) --include /home/krot/code/C++/Lorence/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/krot/code/C++/Lorence -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/12.1.0 -I/usr/include/c++/12.1.0/x86_64-pc-linux-gnu -I/usr/include/c++/12.1.0/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/12.1.0/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/12.1.0/include-fixed -I/usr/include organizer.hpp -o moc_organizer.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:

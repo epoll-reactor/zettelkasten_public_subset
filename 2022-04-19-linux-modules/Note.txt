@@ -357,4 +357,4 @@ write ioctl, read ioctl).
   проснётся. Затем, эта команда вызывает планировщик для переключения контекста на другой процесс.
 
 Продолжить с 11.2 Completions (68 страница)
-file:///home/machen/text/books/The%20Linux%20Kernel%20Module%20Programming%20Guide.pdf
+file:///home/krot/text/books/The%20Linux%20Kernel%20Module%20Programming%20Guide.pdf

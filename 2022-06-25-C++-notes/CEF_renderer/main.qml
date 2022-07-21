@@ -11,7 +11,7 @@ ApplicationWindow {
 
     WebEngineView {
         id: webEngineView
-        url: "file:///home/machen/code/C++/CEF_renderer/Work_page/examples/dashboard.html"
+        url: "file:///home/krot/code/C++/CEF_renderer/Work_page/examples/dashboard.html"
         anchors.fill: parent
     }
 }

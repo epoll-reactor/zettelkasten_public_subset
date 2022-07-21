@@ -77,7 +77,7 @@ void run_gif_writer_tests() {
     float background_distance = 2.0f;
     const size_t image_size = 512;
     mandelbrot_generator(
-      "/home/machen/images/mandelbrot_" + std::to_string(counter++) + ".png", image_size, gamma, intensity, scaling, background_distance
+      "/home/krot/images/mandelbrot_" + std::to_string(counter++) + ".png", image_size, gamma, intensity, scaling, background_distance
     ).generate();
   }
   for (float scaling = 3.0f; scaling > 1.0f; scaling -= 0.03) {
@@ -86,11 +86,11 @@ void run_gif_writer_tests() {
     float background_distance = 2.0f;
     const size_t image_size = 512;
     mandelbrot_generator(
-      "/home/machen/images/mandelbrot_" + std::to_string(counter++) + ".png", image_size, gamma, intensity, scaling, background_distance
+      "/home/krot/images/mandelbrot_" + std::to_string(counter++) + ".png", image_size, gamma, intensity, scaling, background_distance
     ).generate();
   }
 
-  std::ofstream gif("/home/machen/images/mandelbrot_animated.gif");
+  std::ofstream gif("/home/krot/images/mandelbrot_animated.gif");
   gif << "GIF89a";
   gif << (512 & 0xFF);
   gif << ((512 >> 8) & 0xFF);
@@ -108,7 +108,7 @@ void run_gif_writer_tests() {
   gif << 0;
   gif << 0;
   for (size_t i = 0; i < counter; ++i) {
-    std::fstream image("/home/machen/images/mandelbrot_" + std::to_string(i) + ".png", std::ios::app);
+    std::fstream image("/home/krot/images/mandelbrot_" + std::to_string(i) + ".png", std::ios::app);
     size_t size = image.tellp();
     char* buffer = new char[size];
     image.seekg(0, std::ios::beg);
