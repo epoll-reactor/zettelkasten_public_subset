@@ -16,14 +16,15 @@ int main()
 {
   llvm::LLVMContext Ctx;
   llvm::Module *Module = new llvm::Module("asdf", Ctx);
-  llvm::IRBuilder<> builder(Ctx);
+  llvm::IRBuilder<> Builder(Ctx);
 
-  llvm::FunctionType *Signature = llvm::FunctionType::get(builder.getVoidTy(), false);
+  llvm::FunctionType *Signature = llvm::FunctionType::get(Builder.getVoidTy(), false);
   llvm::Function *Func = llvm::Function::Create(Signature, llvm::Function::ExternalLinkage, "main", Module);
-  llvm::BasicBlock *entry = llvm::BasicBlock::Create(Ctx, "entry", Func);
-  builder.SetInsertPoint(entry);
+  llvm::BasicBlock *Entry = llvm::BasicBlock::Create(Ctx, "entry", Func);
+  Builder.SetInsertPoint(Entry);
 
-  builder.CreateGlobalStringPtr("hello world!\n");
+  llvm::Value *S = Builder.CreateGlobalStringPtr("hello world!\n");
+  Builder.CreateRet(S);
 
   std::string Result;
 
