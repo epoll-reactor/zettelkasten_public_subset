@@ -23,9 +23,10 @@ int main()
   llvm::BasicBlock *Entry = llvm::BasicBlock::Create(Ctx, "entry", Func);
   Builder.SetInsertPoint(Entry);
 
-  llvm::Value *S = Builder.CreateGlobalStringPtr("hello world!\n");
-  Builder.CreateRet(S);
+  llvm::Value *S = Builder.CreateGlobalStringPtr("hello world!\n", "", 0, Module);
 
+  Builder.CreateRet(S);
+  
   std::string Result;
 
   for (const auto &F : Module->getFunctionList()) {
